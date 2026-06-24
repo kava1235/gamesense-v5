@@ -10,17 +10,273 @@ _G.NoclipEnabled = false
 _G.FlyEnabled = false
 
 -- ==========================================
--- UI БИБЛИОТЕКА (ПОЛНАЯ, БЕЗ СОКРАЩЕНИЙ)
+-- ТЕМЫ ОФОРМЛЕНИЯ (10 вариантов)
+-- ==========================================
+_G.Themes = {
+    Default = {
+        Accent      = Color3.fromRGB(255, 120, 30),
+        Background  = Color3.fromRGB(25, 25, 25),
+        Background2 = Color3.fromRGB(40, 40, 40),
+        Background3 = Color3.fromRGB(12, 12, 12),
+        Text        = Color3.fromRGB(205, 205, 205),
+        Text2       = Color3.fromRGB(155, 155, 155),
+        Border      = Color3.fromRGB(12, 12, 12),
+        InnerBorder = Color3.fromRGB(60, 60, 60),
+    },
+    Summer = {
+        Accent      = Color3.fromRGB(0, 200, 100),
+        Background  = Color3.fromRGB(240, 248, 255),
+        Background2 = Color3.fromRGB(220, 235, 245),
+        Background3 = Color3.fromRGB(200, 220, 235),
+        Text        = Color3.fromRGB(30, 30, 30),
+        Text2       = Color3.fromRGB(80, 80, 80),
+        Border      = Color3.fromRGB(180, 200, 220),
+        InnerBorder = Color3.fromRGB(200, 220, 240),
+    },
+    FATALITY = {
+        Accent      = Color3.fromRGB(255, 0, 0),
+        Background  = Color3.fromRGB(15, 0, 0),
+        Background2 = Color3.fromRGB(30, 0, 0),
+        Background3 = Color3.fromRGB(10, 0, 0),
+        Text        = Color3.fromRGB(255, 200, 200),
+        Text2       = Color3.fromRGB(200, 100, 100),
+        Border      = Color3.fromRGB(80, 0, 0),
+        InnerBorder = Color3.fromRGB(120, 0, 0),
+    },
+    NEVERLOSE = {
+        Accent      = Color3.fromRGB(0, 120, 255),
+        Background  = Color3.fromRGB(20, 25, 40),
+        Background2 = Color3.fromRGB(30, 40, 60),
+        Background3 = Color3.fromRGB(10, 15, 25),
+        Text        = Color3.fromRGB(200, 220, 255),
+        Text2       = Color3.fromRGB(150, 180, 220),
+        Border      = Color3.fromRGB(0, 40, 80),
+        InnerBorder = Color3.fromRGB(0, 60, 120),
+    },
+    DarkPurple = {
+        Accent      = Color3.fromRGB(160, 80, 255),
+        Background  = Color3.fromRGB(20, 10, 30),
+        Background2 = Color3.fromRGB(40, 20, 50),
+        Background3 = Color3.fromRGB(15, 5, 20),
+        Text        = Color3.fromRGB(220, 200, 255),
+        Text2       = Color3.fromRGB(180, 150, 220),
+        Border      = Color3.fromRGB(60, 30, 80),
+        InnerBorder = Color3.fromRGB(80, 40, 100),
+    },
+    Ocean = {
+        Accent      = Color3.fromRGB(0, 200, 200),
+        Background  = Color3.fromRGB(10, 30, 45),
+        Background2 = Color3.fromRGB(20, 50, 70),
+        Background3 = Color3.fromRGB(5, 15, 25),
+        Text        = Color3.fromRGB(180, 230, 255),
+        Text2       = Color3.fromRGB(130, 190, 220),
+        Border      = Color3.fromRGB(0, 60, 80),
+        InnerBorder = Color3.fromRGB(0, 80, 100),
+    },
+    Matrix = {
+        Accent      = Color3.fromRGB(0, 255, 100),
+        Background  = Color3.fromRGB(0, 5, 0),
+        Background2 = Color3.fromRGB(0, 15, 0),
+        Background3 = Color3.fromRGB(0, 8, 0),
+        Text        = Color3.fromRGB(0, 255, 100),
+        Text2       = Color3.fromRGB(0, 200, 80),
+        Border      = Color3.fromRGB(0, 40, 0),
+        InnerBorder = Color3.fromRGB(0, 60, 0),
+    },
+    Bloody = {
+        Accent      = Color3.fromRGB(180, 0, 0),
+        Background  = Color3.fromRGB(20, 0, 0),
+        Background2 = Color3.fromRGB(35, 0, 0),
+        Background3 = Color3.fromRGB(10, 0, 0),
+        Text        = Color3.fromRGB(255, 150, 150),
+        Text2       = Color3.fromRGB(200, 80, 80),
+        Border      = Color3.fromRGB(80, 0, 0),
+        InnerBorder = Color3.fromRGB(120, 0, 0),
+    },
+    Neon = {
+        Accent      = Color3.fromRGB(255, 0, 200),
+        Background  = Color3.fromRGB(10, 0, 20),
+        Background2 = Color3.fromRGB(20, 0, 40),
+        Background3 = Color3.fromRGB(5, 0, 10),
+        Text        = Color3.fromRGB(255, 200, 255),
+        Text2       = Color3.fromRGB(200, 150, 220),
+        Border      = Color3.fromRGB(60, 0, 80),
+        InnerBorder = Color3.fromRGB(100, 0, 120),
+    },
+    Cyberpunk = {
+        Accent      = Color3.fromRGB(255, 200, 0),
+        Background  = Color3.fromRGB(20, 0, 40),
+        Background2 = Color3.fromRGB(40, 0, 60),
+        Background3 = Color3.fromRGB(10, 0, 25),
+        Text        = Color3.fromRGB(255, 220, 100),
+        Text2       = Color3.fromRGB(200, 180, 80),
+        Border      = Color3.fromRGB(80, 0, 120),
+        InnerBorder = Color3.fromRGB(120, 0, 160),
+    },
+}
+_G.CurrentTheme = 'Default'
+_G.Settings = {}
+
+-- ==========================================
+-- ВАШ ESP (ПОЛНОСТЬЮ ЗАМЕНЁН)
+-- ==========================================
+-- Services
+local RunService = game:GetService("RunService")
+local PlayersService = game:GetService("Players")
+local Camera = workspace.CurrentCamera
+local LocalPlayer = PlayersService.LocalPlayer
+
+-- Cache / Pool storage for performance optimization
+local ESP_Cache = {}
+
+-- Helper functions
+local function HasCharacter(Player)
+    return Player.Character and Player.Character:FindFirstChild("HumanoidRootPart")
+end
+
+local function GetPlayerColor(Player)
+    local Character = Player.Character
+    local Backpack = Player:FindFirstChild("Backpack")
+    
+    if (Backpack and Backpack:FindFirstChild("Knife")) or (Character and Character:FindFirstChild("Knife")) then
+        return Color3.fromRGB(255, 0, 50)     -- Сверхъяркий Неоновый Красный
+    elseif (Backpack and Backpack:FindFirstChild("Gun")) or (Character and Character:FindFirstChild("Gun")) then
+        return Color3.fromRGB(0, 195, 255)    -- Яркий Электрический Голубой
+    else
+        return Color3.fromRGB(0, 255, 100)    -- Кислотный Неоновый Зеленый
+    end
+end
+
+-- Create a drawing object with outlines
+local function createDrawing(class, properties)
+    local obj = Drawing.new(class)
+    for prop, val in pairs(properties) do
+        obj[prop] = val
+    end
+    return obj
+end
+
+-- Container for player drawing objects (Corner Box Only)
+local function CreateESPContainer()
+    local box = {
+        Main = {},
+        Outline = {}
+    }
+    
+    -- Create 8 lines for 4 corners (Увеличенная толщина для максимальной видимости)
+    for i = 1, 8 do
+        box.Main[i] = createDrawing("Line", {Thickness = 2.5, ZIndex = 4, Visible = false})
+        box.Outline[i] = createDrawing("Line", {Thickness = 5.0, Color = Color3.fromRGB(0, 0, 0), ZIndex = 1, Visible = false})
+    end
+    
+    return box
+end
+
+local function RemoveESP(Player)
+    if ESP_Cache[Player] then
+        local box = ESP_Cache[Player]
+        for i = 1, 8 do
+            box.Main[i]:Remove()
+            box.Outline[i]:Remove()
+        end
+        ESP_Cache[Player] = nil
+    end
+end
+
+-- Update layout
+local function UpdateESP()
+    for _, Player in pairs(PlayersService:GetPlayers()) do
+        if Player == LocalPlayer then continue end
+        
+        if HasCharacter(Player) then
+            if not ESP_Cache[Player] then
+                ESP_Cache[Player] = CreateESPContainer()
+            end
+            
+            local box = ESP_Cache[Player]
+            local Character = Player.Character
+            local HRP = Character.HumanoidRootPart
+            
+            -- Calculate precise height and width based on 3D bounding box
+            local _, Size = Character:GetBoundingBox()
+            local TopWorld = (HRP.CFrame * CFrame.new(0, Size.Y / 2, 0)).Position
+            local BottomWorld = (HRP.CFrame * CFrame.new(0, -Size.Y / 2, 0)).Position
+            
+            local TopScreen, TopOnScreen = Camera:WorldToViewportPoint(TopWorld)
+            local BottomScreen, BottomOnScreen = Camera:WorldToViewportPoint(BottomWorld)
+            
+            if TopOnScreen and BottomOnScreen then
+                local Height = math.abs(TopScreen.Y - BottomScreen.Y)
+                local Width = Height * 0.55 -- Fixed aesthetic aspect ratio
+                
+                local X = TopScreen.X - Width / 2
+                local Y = TopScreen.Y
+                
+                local color = GetPlayerColor(Player)
+                local length = Width / 3.5 -- Чуть более длинные уголки для лучшей видимости
+                
+                -- Corner points configuration
+                local lines = {
+                    -- Top Left
+                    {From = Vector2.new(X, Y), To = Vector2.new(X + length, Y)},
+                    {From = Vector2.new(X, Y), To = Vector2.new(X, Y + length)},
+                    -- Top Right
+                    {From = Vector2.new(X + Width, Y), To = Vector2.new(X + Width - length, Y)},
+                    {From = Vector2.new(X + Width, Y), To = Vector2.new(X + Width, Y + length)},
+                    -- Bottom Left
+                    {From = Vector2.new(X, Y + Height), To = Vector2.new(X + length, Y + Height)},
+                    {From = Vector2.new(X, Y + Height), To = Vector2.new(X, Y + Height - length)},
+                    -- Bottom Right
+                    {From = Vector2.new(X + Width, Y + Height), To = Vector2.new(X + Width - length, Y + Height)},
+                    {From = Vector2.new(X + Width, Y + Height), To = Vector2.new(X + Width, Y + Height - length)}
+                }
+                
+                -- Apply positions and colors to Corners
+                for i = 1, 8 do
+                    local lData = lines[i]
+                    local main = box.Main[i]
+                    local out = box.Outline[i]
+                    
+                    main.From = lData.From
+                    main.To = lData.To
+                    main.Color = color
+                    main.Visible = true
+                    
+                    out.From = lData.From
+                    out.To = lData.To
+                    out.Visible = true
+                end
+            else
+                -- Hide if offscreen
+                for i = 1, 8 do
+                    box.Main[i].Visible = false
+                    box.Outline[i].Visible = false
+                end
+            end
+        else
+            -- Hide if player has no character/dead
+            if ESP_Cache[Player] then
+                local box = ESP_Cache[Player]
+                for i = 1, 8 do
+                    box.Main[i].Visible = false
+                    box.Outline[i].Visible = false
+                end
+            end
+        end
+    end
+end
+
+-- Clean up leaving players
+PlayersService.PlayerRemoving:Connect(RemoveESP)
+
+-- Bind execution
+RunService.RenderStepped:Connect(UpdateESP)
+
+-- ==========================================
+-- UI БИБЛИОТЕКА (ПОЛНАЯ)
 -- ==========================================
 local Passed, Statement = pcall(function()
-    -- [[ // Libraries // ]]
-    local library = {
-        Renders = {},
-        Connections = {},
-        Folder = "PuppyWare",
-        Assets = "Assets",
-        Configs = "Configs"
-    }
+    local library = { Renders = {}, Connections = {}, Folder = "PuppyWare", Assets = "Assets", Configs = "Configs" }
     local utility = {}
     local pages = {}
     local sections = {}
@@ -79,11 +335,11 @@ local Passed, Statement = pcall(function()
         return Table3
     end
 
-    function library:CreateWindow(Properties)
+    function library:CreateWindow(Properties, theme)
         Properties = Properties or {}
         local Window = {
             Pages = {},
-            Accent = Color3.fromRGB(255, 120, 30),
+            Accent = theme.Accent,
             Enabled = true,
             Key = _G.MenuKey or Enum.KeyCode.Insert,
             MainFrame = nil,
@@ -100,9 +356,9 @@ local Passed, Statement = pcall(function()
             })
             local ScreenGui_MainFrame = utility:RenderObject("Frame", {
                 AnchorPoint = Vector2.new(0.5, 0.5),
-                BackgroundColor3 = Color3.fromRGB(25, 25, 25),
+                BackgroundColor3 = theme.Background,
                 BackgroundTransparency = 0,
-                BorderColor3 = Color3.fromRGB(12, 12, 12),
+                BorderColor3 = theme.Border,
                 BorderMode = "Inset",
                 BorderSizePixel = 1,
                 Parent = ScreenGui,
@@ -111,7 +367,7 @@ local Passed, Statement = pcall(function()
             })
             Window.MainFrame = ScreenGui_MainFrame
             local ScreenGui_MainFrame_InnerBorder = utility:RenderObject("Frame", {
-                BackgroundColor3 = Color3.fromRGB(40, 40, 40),
+                BackgroundColor3 = theme.Background2,
                 BackgroundTransparency = 0,
                 BorderColor3 = Color3.fromRGB(0, 0, 0),
                 BorderSizePixel = 0,
@@ -120,9 +376,9 @@ local Passed, Statement = pcall(function()
                 Size = UDim2.new(1, -2, 1, -2)
             })
             local MainFrame_InnerBorder_InnerFrame = utility:RenderObject("Frame", {
-                BackgroundColor3 = Color3.fromRGB(12, 12, 12),
+                BackgroundColor3 = theme.Background3,
                 BackgroundTransparency = 0,
-                BorderColor3 = Color3.fromRGB(60, 60, 60),
+                BorderColor3 = theme.InnerBorder,
                 BorderMode = "Inset",
                 BorderSizePixel = 1,
                 Parent = ScreenGui_MainFrame,
@@ -130,7 +386,7 @@ local Passed, Statement = pcall(function()
                 Size = UDim2.new(1, -6, 1, -6)
             })
             local InnerBorder_InnerFrame_Tabs = utility:RenderObject("Frame", {
-                BackgroundColor3 = Color3.fromRGB(12, 12, 12),
+                BackgroundColor3 = theme.Background3,
                 BackgroundTransparency = 0,
                 BorderColor3 = Color3.fromRGB(0, 0, 0),
                 BorderSizePixel = 0,
@@ -149,7 +405,7 @@ local Passed, Statement = pcall(function()
                 Size = UDim2.new(1, -73, 1, -4)
             })
             local InnerBorder_InnerFrame_TopGradient = utility:RenderObject("Frame", {
-                BackgroundColor3 = Color3.fromRGB(12, 12, 12),
+                BackgroundColor3 = theme.Background3,
                 BackgroundTransparency = 0,
                 BorderColor3 = Color3.fromRGB(0, 0, 0),
                 BorderSizePixel = 0,
@@ -169,7 +425,7 @@ local Passed, Statement = pcall(function()
                 PaddingTop = UDim.new(0, 9)
             })
             local InnerFrame_Pages_InnerBorder = utility:RenderObject("Frame", {
-                BackgroundColor3 = Color3.fromRGB(45, 45, 45),
+                BackgroundColor3 = theme.Background2,
                 BackgroundTransparency = 0,
                 BorderColor3 = Color3.fromRGB(0, 0, 0),
                 BorderSizePixel = 0,
@@ -189,7 +445,7 @@ local Passed, Statement = pcall(function()
                 ImageColor3 = Color3.fromRGB(255, 255, 255)
             })
             local Pages_InnerBorder_InnerFrame = utility:RenderObject("Frame", {
-                BackgroundColor3 = Color3.fromRGB(20, 20, 20),
+                BackgroundColor3 = theme.Background,
                 BackgroundTransparency = 0,
                 BorderColor3 = Color3.fromRGB(0, 0, 0),
                 BorderSizePixel = 0,
@@ -209,7 +465,7 @@ local Passed, Statement = pcall(function()
                 Position = UDim2.new(0, 0, 0, 0),
                 Size = UDim2.new(1, 0, 1, 0),
                 Image = "rbxassetid://8547666218",
-                ImageColor3 = Color3.fromRGB(12, 12, 12),
+                ImageColor3 = theme.Background3,
                 ScaleType = "Tile",
                 TileSize = UDim2.new(0, 8, 0, 8)
             })
@@ -260,7 +516,6 @@ local Passed, Statement = pcall(function()
                     local onRight = framePos.X + frameSize.X - mousePos.X <= resizeAreaSize
                     local onTop = mousePos.Y - framePos.Y <= resizeAreaSize
                     local onBottom = framePos.Y + frameSize.Y - mousePos.Y <= resizeAreaSize
-
                     if onLeft and onTop then
                         uis.MouseIcon = "rbxasset://textures/Cursors/SizeNWSE.png"
                         resizeEdge = "topleft"
@@ -318,7 +573,6 @@ local Passed, Statement = pcall(function()
                         local newSize = resizeStartSize
                         local newPos = resizeStartPos
                         local minW, minH = Window.MinSize.X, Window.MinSize.Y
-
                         if resizeEdge == "right" then
                             newSize = UDim2.new(0, math.max(minW, resizeStartSize.X.Offset + delta.X), 0, resizeStartSize.Y.Offset)
                         elseif resizeEdge == "left" then
@@ -352,7 +606,6 @@ local Passed, Statement = pcall(function()
                             newSize = UDim2.new(0, newW, 0, newH)
                             newPos = UDim2.new(resizeStartPos.X.Scale, resizeStartPos.X.Offset, resizeStartPos.Y.Scale, resizeStartPos.Y.Offset)
                         end
-
                         ScreenGui_MainFrame.Size = newSize
                         ScreenGui_MainFrame.Position = newPos
                     end
@@ -398,12 +651,12 @@ local Passed, Statement = pcall(function()
                     end
                 end
                 function Window:Unload()
-                    ScreenGui:Remove()
+                    if ScreenGui and ScreenGui.Parent then
+                        ScreenGui:Remove()
+                    end
                     for index, connection in pairs(library.Connections) do
                         connection:Disconnect()
                     end
-                    library = nil
-                    utility = nil
                 end
             end
             do
@@ -425,7 +678,7 @@ local Passed, Statement = pcall(function()
         return setmetatable(Window, library)
     end
 
-    function library:CreatePage(Properties)
+    function library:CreatePage(Properties, theme)
         Properties = Properties or {}
         local Page = {
             Image = (Properties.image or Properties.Image or Properties.icon or Properties.Icon),
@@ -476,7 +729,7 @@ local Passed, Statement = pcall(function()
                 Text = ""
             })
             local Tab_Border_Inner = utility:RenderObject("Frame", {
-                BackgroundColor3 = Color3.fromRGB(40, 40, 40),
+                BackgroundColor3 = theme.Background2,
                 BackgroundTransparency = 0,
                 BorderColor3 = Color3.fromRGB(0, 0, 0),
                 BorderSizePixel = 0,
@@ -487,7 +740,7 @@ local Passed, Statement = pcall(function()
                 RenderTime = 0.15
             })
             local Border_Inner_Inner = utility:RenderObject("Frame", {
-                BackgroundColor3 = Color3.fromRGB(20, 20, 20),
+                BackgroundColor3 = theme.Background,
                 BackgroundTransparency = 0,
                 BorderColor3 = Color3.fromRGB(0, 0, 0),
                 BorderSizePixel = 0,
@@ -506,7 +759,7 @@ local Passed, Statement = pcall(function()
                 Position = UDim2.new(0, 0, 0, 0),
                 Size = UDim2.new(1, 0, 1, 0),
                 Image = "rbxassetid://8509210785",
-                ImageColor3 = Color3.fromRGB(12, 12, 12),
+                ImageColor3 = theme.Background3,
                 ScaleType = "Tile",
                 TileSize = UDim2.new(0, 8, 0, 8),
                 ZIndex = 2
@@ -588,7 +841,7 @@ local Passed, Statement = pcall(function()
         return setmetatable(Page, pages)
     end
 
-    function pages:CreateSection(Properties)
+    function pages:CreateSection(Properties, theme)
         Properties = Properties or {}
         local Section = {
             Name = (Properties.name or Properties.Name or Properties.title or Properties.Title or "New Section"),
@@ -601,9 +854,9 @@ local Passed, Statement = pcall(function()
         }
         do
             local Section_Holder = utility:RenderObject("Frame", {
-                BackgroundColor3 = Color3.fromRGB(40, 40, 40),
+                BackgroundColor3 = theme.Background2,
                 BackgroundTransparency = 0,
-                BorderColor3 = Color3.fromRGB(12, 12, 12),
+                BorderColor3 = theme.Border,
                 BorderMode = "Inset",
                 BorderSizePixel = 1,
                 Parent = Section.Page[Section.Side],
@@ -621,7 +874,7 @@ local Passed, Statement = pcall(function()
                 ZIndex = 2
             })
             local Section_Holder_Frame = utility:RenderObject("Frame", {
-                BackgroundColor3 = Color3.fromRGB(23, 23, 23),
+                BackgroundColor3 = theme.Background,
                 BackgroundTransparency = 0,
                 BorderColor3 = Color3.fromRGB(0, 0, 0),
                 BorderSizePixel = 0,
@@ -631,7 +884,7 @@ local Passed, Statement = pcall(function()
                 ZIndex = 2
             })
             local Section_Holder_TitleInline = utility:RenderObject("Frame", {
-                BackgroundColor3 = Color3.fromRGB(23, 23, 23),
+                BackgroundColor3 = theme.Background,
                 BackgroundTransparency = 0,
                 BorderColor3 = Color3.fromRGB(0, 0, 0),
                 BorderSizePixel = 0,
@@ -653,7 +906,7 @@ local Passed, Statement = pcall(function()
                 Font = "Code",
                 RichText = true,
                 Text = "<b>" .. Section.Name .. "</b>",
-                TextColor3 = Color3.fromRGB(205, 205, 205),
+                TextColor3 = theme.Text,
                 TextSize = 11,
                 TextStrokeTransparency = 1,
                 TextXAlignment = "Left"
@@ -670,7 +923,7 @@ local Passed, Statement = pcall(function()
                 Visible = false,
                 ZIndex = 4,
                 Image = "rbxassetid://7783533907",
-                ImageColor3 = Color3.fromRGB(23, 23, 23)
+                ImageColor3 = theme.Background
             })
             local Holder_Extra_Gradient2 = utility:RenderObject("ImageLabel", {
                 AnchorPoint = Vector2.new(0, 1),
@@ -684,7 +937,7 @@ local Passed, Statement = pcall(function()
                 Visible = false,
                 ZIndex = 4,
                 Image = "rbxassetid://7783533907",
-                ImageColor3 = Color3.fromRGB(23, 23, 23)
+                ImageColor3 = theme.Background
             })
             local Holder_Extra_ArrowUp = utility:RenderObject("TextButton", {
                 BackgroundColor3 = Color3.fromRGB(255, 0, 0),
@@ -721,7 +974,7 @@ local Passed, Statement = pcall(function()
                 Visible = true,
                 ZIndex = 4,
                 Image = "rbxassetid://8548757311",
-                ImageColor3 = Color3.fromRGB(205, 205, 205)
+                ImageColor3 = theme.Text
             })
             local Extra_ArrowDown_Image = utility:RenderObject("ImageLabel", {
                 BackgroundColor3 = Color3.fromRGB(0, 0, 0),
@@ -734,11 +987,11 @@ local Passed, Statement = pcall(function()
                 Visible = true,
                 ZIndex = 4,
                 Image = "rbxassetid://8548723563",
-                ImageColor3 = Color3.fromRGB(205, 205, 205)
+                ImageColor3 = theme.Text
             })
             local Holder_Extra_Bar = utility:RenderObject("Frame", {
                 AnchorPoint = Vector2.new(1, 0),
-                BackgroundColor3 = Color3.fromRGB(45, 45, 45),
+                BackgroundColor3 = theme.Background2,
                 BackgroundTransparency = 0,
                 BorderColor3 = Color3.fromRGB(0, 0, 0),
                 BorderSizePixel = 0,
@@ -749,7 +1002,7 @@ local Passed, Statement = pcall(function()
                 ZIndex = 4
             })
             local Holder_Extra_Line = utility:RenderObject("Frame", {
-                BackgroundColor3 = Color3.fromRGB(45, 45, 45),
+                BackgroundColor3 = theme.Background2,
                 BackgroundTransparency = 0,
                 BorderColor3 = Color3.fromRGB(0, 0, 0),
                 BorderSizePixel = 0,
@@ -771,7 +1024,7 @@ local Passed, Statement = pcall(function()
                 BottomImage = "rbxassetid://7783554086",
                 CanvasSize = UDim2.new(0, 0, 0, 0),
                 MidImage = "rbxassetid://7783554086",
-                ScrollBarImageColor3 = Color3.fromRGB(65, 65, 65),
+                ScrollBarImageColor3 = theme.Background2,
                 ScrollBarImageTransparency = 0,
                 ScrollBarThickness = 5,
                 TopImage = "rbxassetid://7783554086",
@@ -878,16 +1131,21 @@ local Passed, Statement = pcall(function()
     end
 
     do
-        function sections:CreateToggle(Properties)
+        function sections:CreateToggle(Properties, theme)
             Properties = Properties or {}
+            local saveKey = Properties.saveKey or (self.Name .. "_" .. Properties.Name)
             local Content = {
                 Name = (Properties.name or Properties.Name or Properties.title or Properties.Title or "New Toggle"),
                 State = (Properties.state or Properties.State or Properties.def or Properties.Def or Properties.default or Properties.Default or false),
                 Callback = (Properties.callback or Properties.Callback or Properties.callBack or Properties.CallBack or function() end),
                 Window = self.Window,
                 Page = self.Page,
-                Section = self
+                Section = self,
+                SaveKey = saveKey
             }
+            if _G.Settings[saveKey] ~= nil then
+                Content.State = _G.Settings[saveKey]
+            end
             do
                 local Content_Holder = utility:RenderObject("Frame", {
                     BackgroundColor3 = Color3.fromRGB(0, 0, 0),
@@ -899,7 +1157,7 @@ local Passed, Statement = pcall(function()
                     ZIndex = 3
                 })
                 local Content_Holder_Outline = utility:RenderObject("Frame", {
-                    BackgroundColor3 = Color3.fromRGB(12, 12, 12),
+                    BackgroundColor3 = theme.Border,
                     BackgroundTransparency = 0,
                     BorderColor3 = Color3.fromRGB(0, 0, 0),
                     BorderSizePixel = 0,
@@ -921,7 +1179,7 @@ local Passed, Statement = pcall(function()
                     Font = "Code",
                     RichText = true,
                     Text = Content.Name,
-                    TextColor3 = Color3.fromRGB(205, 205, 205),
+                    TextColor3 = theme.Text,
                     TextSize = 9,
                     TextStrokeTransparency = 1,
                     TextXAlignment = "Left"
@@ -939,7 +1197,7 @@ local Passed, Statement = pcall(function()
                     Font = "Code",
                     RichText = true,
                     Text = Content.Name,
-                    TextColor3 = Color3.fromRGB(205, 205, 205),
+                    TextColor3 = theme.Text,
                     TextSize = 9,
                     TextStrokeTransparency = 1,
                     TextTransparency = 0.5,
@@ -955,7 +1213,7 @@ local Passed, Statement = pcall(function()
                     Text = ""
                 })
                 local Holder_Outline_Frame = utility:RenderObject("Frame", {
-                    BackgroundColor3 = Color3.fromRGB(77, 77, 77),
+                    BackgroundColor3 = Content.State and theme.Accent or Color3.fromRGB(77, 77, 77),
                     BackgroundTransparency = 0,
                     BorderColor3 = Color3.fromRGB(0, 0, 0),
                     BorderSizePixel = 0,
@@ -973,7 +1231,8 @@ local Passed, Statement = pcall(function()
                 do
                     function Content:Set(state)
                         Content.State = state
-                        Holder_Outline_Frame.BackgroundColor3 = Content.State and Content.Window.Accent or Color3.fromRGB(77, 77, 77)
+                        Holder_Outline_Frame.BackgroundColor3 = Content.State and theme.Accent or Color3.fromRGB(77, 77, 77)
+                        _G.Settings[Content.SaveKey] = Content.State
                         Content.Callback(Content:Get())
                     end
                     function Content:Get()
@@ -996,8 +1255,9 @@ local Passed, Statement = pcall(function()
             return Content
         end
 
-        function sections:CreateSlider(Properties)
+        function sections:CreateSlider(Properties, theme)
             Properties = Properties or {}
+            local saveKey = Properties.saveKey or (self.Name .. "_" .. Properties.Name)
             local Content = {
                 Name = (Properties.name or Properties.Name or Properties.title or Properties.Title or nil),
                 State = (Properties.state or Properties.State or Properties.def or Properties.Def or Properties.default or Properties.Default or false),
@@ -1009,8 +1269,12 @@ local Passed, Statement = pcall(function()
                 Holding = false,
                 Window = self.Window,
                 Page = self.Page,
-                Section = self
+                Section = self,
+                SaveKey = saveKey
             }
+            if _G.Settings[saveKey] ~= nil then
+                Content.State = _G.Settings[saveKey]
+            end
             do
                 local Content_Holder = utility:RenderObject("Frame", {
                     BackgroundColor3 = Color3.fromRGB(0, 0, 0),
@@ -1022,7 +1286,7 @@ local Passed, Statement = pcall(function()
                     ZIndex = 3
                 })
                 local Content_Holder_Outline = utility:RenderObject("Frame", {
-                    BackgroundColor3 = Color3.fromRGB(12, 12, 12),
+                    BackgroundColor3 = theme.Border,
                     BackgroundTransparency = 0,
                     BorderColor3 = Color3.fromRGB(0, 0, 0),
                     BorderSizePixel = 0,
@@ -1045,7 +1309,7 @@ local Passed, Statement = pcall(function()
                         Font = "Code",
                         RichText = true,
                         Text = Content.Name,
-                        TextColor3 = Color3.fromRGB(205, 205, 205),
+                        TextColor3 = theme.Text,
                         TextSize = 9,
                         TextStrokeTransparency = 1,
                         TextXAlignment = "Left"
@@ -1063,7 +1327,7 @@ local Passed, Statement = pcall(function()
                         Font = "Code",
                         RichText = true,
                         Text = Content.Name,
-                        TextColor3 = Color3.fromRGB(205, 205, 205),
+                        TextColor3 = theme.Text,
                         TextSize = 9,
                         TextStrokeTransparency = 1,
                         TextTransparency = 0.5,
@@ -1090,7 +1354,7 @@ local Passed, Statement = pcall(function()
                     ZIndex = 3
                 })
                 local Outline_Frame_Slider = utility:RenderObject("Frame", {
-                    BackgroundColor3 = Content.Window.Accent,
+                    BackgroundColor3 = theme.Accent,
                     BackgroundTransparency = 0,
                     BorderColor3 = Color3.fromRGB(0, 0, 0),
                     BorderSizePixel = 0,
@@ -1155,6 +1419,7 @@ local Passed, Statement = pcall(function()
                         Content.State = math.clamp(math.round(state * Content.Decimals) / Content.Decimals, Content.Min, Content.Max)
                         Frame_Slider_Title.Text = "<b>" .. Content.State .. Content.Ending .. "</b>"
                         Outline_Frame_Slider.Size = UDim2.new((1 - ((Content.Max - Content.State) / (Content.Max - Content.Min))), 0, 1, 0)
+                        _G.Settings[Content.SaveKey] = Content.State
                         Content.Callback(Content:Get())
                     end
                     function Content:Refresh()
@@ -1198,8 +1463,9 @@ local Passed, Statement = pcall(function()
             return Content
         end
 
-        function sections:CreateDropdown(Properties)
+        function sections:CreateDropdown(Properties, theme)
             Properties = Properties or {}
+            local saveKey = Properties.saveKey or (self.Name .. "_" .. Properties.Name)
             local Content = {
                 Name = (Properties.name or Properties.Name or Properties.title or Properties.Title or "New Dropdown"),
                 State = (Properties.state or Properties.State or Properties.def or Properties.Def or Properties.default or Properties.Default or 1),
@@ -1208,8 +1474,12 @@ local Passed, Statement = pcall(function()
                 Content = { Open = false },
                 Window = self.Window,
                 Page = self.Page,
-                Section = self
+                Section = self,
+                SaveKey = saveKey
             }
+            if _G.Settings[saveKey] ~= nil then
+                Content.State = _G.Settings[saveKey]
+            end
             do
                 local Content_Holder = utility:RenderObject("Frame", {
                     BackgroundColor3 = Color3.fromRGB(0, 0, 0),
@@ -1221,7 +1491,7 @@ local Passed, Statement = pcall(function()
                     ZIndex = 3
                 })
                 local Content_Holder_Outline = utility:RenderObject("Frame", {
-                    BackgroundColor3 = Color3.fromRGB(12, 12, 12),
+                    BackgroundColor3 = theme.Border,
                     BackgroundTransparency = 0,
                     BorderColor3 = Color3.fromRGB(0, 0, 0),
                     BorderSizePixel = 0,
@@ -1243,7 +1513,7 @@ local Passed, Statement = pcall(function()
                     Font = "Code",
                     RichText = true,
                     Text = Content.Name,
-                    TextColor3 = Color3.fromRGB(205, 205, 205),
+                    TextColor3 = theme.Text,
                     TextSize = 9,
                     TextStrokeTransparency = 1,
                     TextXAlignment = "Left"
@@ -1261,7 +1531,7 @@ local Passed, Statement = pcall(function()
                     Font = "Code",
                     RichText = true,
                     Text = Content.Name,
-                    TextColor3 = Color3.fromRGB(205, 205, 205),
+                    TextColor3 = theme.Text,
                     TextSize = 9,
                     TextStrokeTransparency = 1,
                     TextTransparency = 0.5,
@@ -1304,7 +1574,7 @@ local Passed, Statement = pcall(function()
                     Font = "Code",
                     RichText = true,
                     Text = "",
-                    TextColor3 = Color3.fromRGB(155, 155, 155),
+                    TextColor3 = theme.Text2,
                     TextSize = 9,
                     TextStrokeTransparency = 1,
                     TextXAlignment = "Left"
@@ -1321,7 +1591,7 @@ local Passed, Statement = pcall(function()
                     Font = "Code",
                     RichText = true,
                     Text = "",
-                    TextColor3 = Color3.fromRGB(155, 155, 155),
+                    TextColor3 = theme.Text2,
                     TextSize = 9,
                     TextStrokeTransparency = 1,
                     TextTransparency = 0,
@@ -1336,7 +1606,7 @@ local Passed, Statement = pcall(function()
                     Position = UDim2.new(1, -11, 0.5, -4),
                     Size = UDim2.new(0, 7, 0, 6),
                     Image = "rbxassetid://8532000591",
-                    ImageColor3 = Color3.fromRGB(255, 255, 255),
+                    ImageColor3 = theme.Text,
                     ZIndex = 3
                 })
                 do
@@ -1344,6 +1614,7 @@ local Passed, Statement = pcall(function()
                         Content.State = state
                         Outline_Frame_Title.Text = Content.Options[Content:Get()]
                         Outline_Frame_Title2.Text = Content.Options[Content:Get()]
+                        _G.Settings[Content.SaveKey] = Content.State
                         Content.Callback(Content:Get())
                         if Content.Content.Open then
                             Content.Content:Refresh(Content:Get())
@@ -1371,7 +1642,7 @@ local Passed, Statement = pcall(function()
                             AutomaticCanvasSize = "Y",
                             BottomImage = "rbxassetid://7783554086",
                             MidImage = "rbxassetid://7783554086",
-                            ScrollBarImageColor3 = Color3.fromRGB(65, 65, 65),
+                            ScrollBarImageColor3 = theme.Background2,
                             ScrollBarImageTransparency = 0,
                             ScrollBarThickness = 5,
                             TopImage = "rbxassetid://7783554086",
@@ -1379,7 +1650,7 @@ local Passed, Statement = pcall(function()
                         })
                         clampDropdownPosition(Content_Open_Holder, Content.Window.MainFrame, Content_Holder_Outline)
                         local Open_Holder_Outline = utility:RenderObject("Frame", {
-                            BackgroundColor3 = Color3.fromRGB(12, 12, 12),
+                            BackgroundColor3 = theme.Border,
                             BackgroundTransparency = 0,
                             BorderColor3 = Color3.fromRGB(0, 0, 0),
                             BorderSizePixel = 0,
@@ -1389,7 +1660,7 @@ local Passed, Statement = pcall(function()
                             ZIndex = 6
                         })
                         local Open_Holder_Outline_Frame = utility:RenderObject("Frame", {
-                            BackgroundColor3 = Color3.fromRGB(35, 35, 35),
+                            BackgroundColor3 = theme.Background,
                             BackgroundTransparency = 0,
                             BorderColor3 = Color3.fromRGB(0, 0, 0),
                             BorderSizePixel = 0,
@@ -1400,7 +1671,7 @@ local Passed, Statement = pcall(function()
                         })
                         for Index, Option in pairs(Content.Options) do
                             local Outline_Frame_Option = utility:RenderObject("Frame", {
-                                BackgroundColor3 = Color3.fromRGB(35, 35, 35),
+                                BackgroundColor3 = theme.Background2,
                                 BackgroundTransparency = 0,
                                 BorderColor3 = Color3.fromRGB(0, 0, 0),
                                 BorderSizePixel = 0,
@@ -1421,7 +1692,7 @@ local Passed, Statement = pcall(function()
                                 Font = "Code",
                                 RichText = true,
                                 Text = tostring(Option),
-                                TextColor3 = Index == Content.State and Content.Window.Accent or Color3.fromRGB(205, 205, 205),
+                                TextColor3 = Index == Content.State and theme.Accent or theme.Text,
                                 TextSize = 9,
                                 TextStrokeTransparency = 1,
                                 TextXAlignment = "Left"
@@ -1438,7 +1709,7 @@ local Passed, Statement = pcall(function()
                                 Font = "Code",
                                 RichText = true,
                                 Text = tostring(Option),
-                                TextColor3 = Index == Content.State and Content.Window.Accent or Color3.fromRGB(205, 205, 205),
+                                TextColor3 = Index == Content.State and theme.Accent or theme.Text,
                                 TextSize = 9,
                                 TextStrokeTransparency = 1,
                                 TextTransparency = 0.5,
@@ -1459,10 +1730,10 @@ local Passed, Statement = pcall(function()
                                     Content:Set(Index)
                                 end)
                                 local Entered = utility:CreateConnection(Frame_Option_Button.MouseEnter, function(Input)
-                                    Outline_Frame_Option.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+                                    Outline_Frame_Option.BackgroundColor3 = theme.Background2
                                 end)
                                 local Left = utility:CreateConnection(Frame_Option_Button.MouseLeave, function(Input)
-                                    Outline_Frame_Option.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+                                    Outline_Frame_Option.BackgroundColor3 = theme.Background2
                                 end)
                                 Connections[#Connections + 1] = Clicked
                                 Connections[#Connections + 1] = Entered
@@ -1494,8 +1765,8 @@ local Passed, Statement = pcall(function()
                             end
                             function Content.Content:Refresh(state)
                                 for Index, Value in pairs(Open) do
-                                    Value[2].TextColor3 = Value[1] == Content.State and Content.Window.Accent or Color3.fromRGB(205, 205, 205)
-                                    Value[3].TextColor3 = Value[1] == Content.State and Content.Window.Accent or Color3.fromRGB(205, 205, 205)
+                                    Value[2].TextColor3 = Value[1] == Content.State and theme.Accent or theme.Text
+                                    Value[3].TextColor3 = Value[1] == Content.State and theme.Accent or theme.Text
                                 end
                             end
                         end
@@ -1535,8 +1806,9 @@ local Passed, Statement = pcall(function()
             return Content
         end
 
-        function sections:CreateMultibox(Properties)
+        function sections:CreateMultibox(Properties, theme)
             Properties = Properties or {}
+            local saveKey = Properties.saveKey or (self.Name .. "_" .. Properties.Name)
             local Content = {
                 Name = (Properties.name or Properties.Name or Properties.title or Properties.Title or "New Dropdown"),
                 State = (Properties.state or Properties.State or Properties.def or Properties.Def or Properties.default or Properties.Default or {1}),
@@ -1547,8 +1819,12 @@ local Passed, Statement = pcall(function()
                 Content = { Open = false },
                 Window = self.Window,
                 Page = self.Page,
-                Section = self
+                Section = self,
+                SaveKey = saveKey
             }
+            if _G.Settings[saveKey] ~= nil then
+                Content.State = _G.Settings[saveKey]
+            end
             do
                 local Content_Holder = utility:RenderObject("Frame", {
                     BackgroundColor3 = Color3.fromRGB(0, 0, 0),
@@ -1560,7 +1836,7 @@ local Passed, Statement = pcall(function()
                     ZIndex = 3
                 })
                 local Content_Holder_Outline = utility:RenderObject("Frame", {
-                    BackgroundColor3 = Color3.fromRGB(12, 12, 12),
+                    BackgroundColor3 = theme.Border,
                     BackgroundTransparency = 0,
                     BorderColor3 = Color3.fromRGB(0, 0, 0),
                     BorderSizePixel = 0,
@@ -1582,7 +1858,7 @@ local Passed, Statement = pcall(function()
                     Font = "Code",
                     RichText = true,
                     Text = Content.Name,
-                    TextColor3 = Color3.fromRGB(205, 205, 205),
+                    TextColor3 = theme.Text,
                     TextSize = 9,
                     TextStrokeTransparency = 1,
                     TextXAlignment = "Left"
@@ -1600,7 +1876,7 @@ local Passed, Statement = pcall(function()
                     Font = "Code",
                     RichText = true,
                     Text = Content.Name,
-                    TextColor3 = Color3.fromRGB(205, 205, 205),
+                    TextColor3 = theme.Text,
                     TextSize = 9,
                     TextStrokeTransparency = 1,
                     TextTransparency = 0.5,
@@ -1643,7 +1919,7 @@ local Passed, Statement = pcall(function()
                     Font = "Code",
                     RichText = true,
                     Text = "",
-                    TextColor3 = Color3.fromRGB(155, 155, 155),
+                    TextColor3 = theme.Text2,
                     TextSize = 9,
                     TextStrokeTransparency = 1,
                     TextXAlignment = "Left"
@@ -1660,7 +1936,7 @@ local Passed, Statement = pcall(function()
                     Font = "Code",
                     RichText = true,
                     Text = "",
-                    TextColor3 = Color3.fromRGB(155, 155, 155),
+                    TextColor3 = theme.Text2,
                     TextSize = 9,
                     TextStrokeTransparency = 1,
                     TextTransparency = 0,
@@ -1675,7 +1951,7 @@ local Passed, Statement = pcall(function()
                     Position = UDim2.new(1, -11, 0.5, -4),
                     Size = UDim2.new(0, 7, 0, 6),
                     Image = "rbxassetid://8532000591",
-                    ImageColor3 = Color3.fromRGB(255, 255, 255),
+                    ImageColor3 = theme.Text,
                     ZIndex = 3
                 })
                 do
@@ -1686,6 +1962,7 @@ local Passed, Statement = pcall(function()
                         Serialised = Serialised == "" and "-" or Serialised
                         Outline_Frame_Title.Text = Serialised
                         Outline_Frame_Title2.Text = Serialised
+                        _G.Settings[Content.SaveKey] = Content.State
                         Content.Callback(Content:Get())
                         if Content.Content.Open then
                             Content.Content:Refresh(Content:Get())
@@ -1713,7 +1990,7 @@ local Passed, Statement = pcall(function()
                             AutomaticCanvasSize = "Y",
                             BottomImage = "rbxassetid://7783554086",
                             MidImage = "rbxassetid://7783554086",
-                            ScrollBarImageColor3 = Color3.fromRGB(65, 65, 65),
+                            ScrollBarImageColor3 = theme.Background2,
                             ScrollBarImageTransparency = 0,
                             ScrollBarThickness = 5,
                             TopImage = "rbxassetid://7783554086",
@@ -1721,7 +1998,7 @@ local Passed, Statement = pcall(function()
                         })
                         clampDropdownPosition(Content_Open_Holder, Content.Window.MainFrame, Content_Holder_Outline)
                         local Open_Holder_Outline = utility:RenderObject("Frame", {
-                            BackgroundColor3 = Color3.fromRGB(12, 12, 12),
+                            BackgroundColor3 = theme.Border,
                             BackgroundTransparency = 0,
                             BorderColor3 = Color3.fromRGB(0, 0, 0),
                             BorderSizePixel = 0,
@@ -1731,7 +2008,7 @@ local Passed, Statement = pcall(function()
                             ZIndex = 6
                         })
                         local Open_Holder_Outline_Frame = utility:RenderObject("Frame", {
-                            BackgroundColor3 = Color3.fromRGB(21, 21, 21),
+                            BackgroundColor3 = theme.Background,
                             BackgroundTransparency = 0,
                             BorderColor3 = Color3.fromRGB(0, 0, 0),
                             BorderSizePixel = 0,
@@ -1742,7 +2019,7 @@ local Passed, Statement = pcall(function()
                         })
                         for Index, Option in pairs(Content.Options) do
                             local Outline_Frame_Option = utility:RenderObject("Frame", {
-                                BackgroundColor3 = Color3.fromRGB(35, 35, 35),
+                                BackgroundColor3 = theme.Background2,
                                 BackgroundTransparency = 0,
                                 BorderColor3 = Color3.fromRGB(0, 0, 0),
                                 BorderSizePixel = 0,
@@ -1763,7 +2040,7 @@ local Passed, Statement = pcall(function()
                                 Font = "Code",
                                 RichText = true,
                                 Text = tostring(Option),
-                                TextColor3 = table.find(Content.State, Index) and Content.Window.Accent or Color3.fromRGB(205, 205, 205),
+                                TextColor3 = table.find(Content.State, Index) and theme.Accent or theme.Text,
                                 TextSize = 9,
                                 TextStrokeTransparency = 1,
                                 TextXAlignment = "Left"
@@ -1780,7 +2057,7 @@ local Passed, Statement = pcall(function()
                                 Font = "Code",
                                 RichText = true,
                                 Text = tostring(Option),
-                                TextColor3 = table.find(Content.State, Index) and Content.Window.Accent or Color3.fromRGB(205, 205, 205),
+                                TextColor3 = table.find(Content.State, Index) and theme.Accent or theme.Text,
                                 TextSize = 9,
                                 TextStrokeTransparency = 1,
                                 TextTransparency = 0.5,
@@ -1811,10 +2088,10 @@ local Passed, Statement = pcall(function()
                                     Content:Set(NewTable)
                                 end)
                                 local Entered = utility:CreateConnection(Frame_Option_Button.MouseEnter, function(Input)
-                                    Outline_Frame_Option.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+                                    Outline_Frame_Option.BackgroundColor3 = theme.Background2
                                 end)
                                 local Left = utility:CreateConnection(Frame_Option_Button.MouseLeave, function(Input)
-                                    Outline_Frame_Option.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+                                    Outline_Frame_Option.BackgroundColor3 = theme.Background2
                                 end)
                                 Connections[#Connections + 1] = Clicked
                                 Connections[#Connections + 1] = Entered
@@ -1846,8 +2123,8 @@ local Passed, Statement = pcall(function()
                             end
                             function Content.Content:Refresh(state)
                                 for Index, Value in pairs(Open) do
-                                    Value[2].TextColor3 = table.find(Content.State, Value[1]) and Content.Window.Accent or Color3.fromRGB(205, 205, 205)
-                                    Value[3].TextColor3 = table.find(Content.State, Value[1]) and Content.Window.Accent or Color3.fromRGB(205, 205, 205)
+                                    Value[2].TextColor3 = table.find(Content.State, Value[1]) and theme.Accent or theme.Text
+                                    Value[3].TextColor3 = table.find(Content.State, Value[1]) and theme.Accent or theme.Text
                                 end
                             end
                         end
@@ -1887,8 +2164,9 @@ local Passed, Statement = pcall(function()
             return Content
         end
 
-        function sections:CreateKeybind(Properties)
+        function sections:CreateKeybind(Properties, theme)
             Properties = Properties or {}
+            local saveKey = Properties.saveKey or (self.Name .. "_" .. Properties.Name)
             local Content = {
                 Name = (Properties.name or Properties.Name or Properties.title or Properties.Title or "New Toggle"),
                 State = (Properties.state or Properties.State or Properties.def or Properties.Def or Properties.default or Properties.Default or nil),
@@ -1898,8 +2176,12 @@ local Passed, Statement = pcall(function()
                 Holding = false,
                 Window = self.Window,
                 Page = self.Page,
-                Section = self
+                Section = self,
+                SaveKey = saveKey
             }
+            if _G.Settings[saveKey] ~= nil then
+                Content.State = _G.Settings[saveKey]
+            end
             local Keys = {
                 KeyCodes = {"Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "A", "S", "D", "F", "G", "H", "J", "K", "L", "Z", "X", "C", "V", "B", "N", "M", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "0", "Insert", "Tab", "Home", "End", "LeftAlt", "LeftControl", "LeftShift", "RightAlt", "RightControl", "RightShift", "CapsLock"},
                 Inputs = {"MouseButton1", "MouseButton2", "MouseButton3"},
@@ -1928,7 +2210,7 @@ local Passed, Statement = pcall(function()
                     Font = "Code",
                     RichText = true,
                     Text = Content.Name,
-                    TextColor3 = Color3.fromRGB(205, 205, 205),
+                    TextColor3 = theme.Text,
                     TextSize = 9,
                     TextStrokeTransparency = 1,
                     TextXAlignment = "Left"
@@ -1946,7 +2228,7 @@ local Passed, Statement = pcall(function()
                     Font = "Code",
                     RichText = true,
                     Text = Content.Name,
-                    TextColor3 = Color3.fromRGB(205, 205, 205),
+                    TextColor3 = theme.Text,
                     TextSize = 9,
                     TextStrokeTransparency = 1,
                     TextTransparency = 0.5,
@@ -1974,7 +2256,7 @@ local Passed, Statement = pcall(function()
                     Font = "Code",
                     RichText = true,
                     Text =  "",
-                    TextColor3 = Color3.fromRGB(114, 114, 114),
+                    TextColor3 = theme.Text2,
                     TextStrokeColor3 = Color3.fromRGB(15, 15, 15),
                     TextSize = 9,
                     TextStrokeTransparency = 0,
@@ -1985,6 +2267,7 @@ local Passed, Statement = pcall(function()
                         Content.State = state or {}
                         Content.Active = false
                         Content_Holder_Value.Text = "[" .. (#Content:Get() > 0 and Content:Shorten(Content:Get()[2]) or "-") .. "]"
+                        _G.Settings[Content.SaveKey] = Content.State
                         Content.Callback(Content:Get())
                     end
                     function Content:Get()
@@ -2019,14 +2302,14 @@ local Passed, Statement = pcall(function()
                         Content_Holder_Value.TextColor3 = Color3.fromRGB(164, 164, 164)
                     end)
                     utility:CreateConnection(Content_Holder_Button.MouseLeave, function(Input)
-                        Content_Holder_Value.TextColor3 = Content.Holding and Color3.fromRGB(255, 0, 0) or Color3.fromRGB(114, 114, 114)
+                        Content_Holder_Value.TextColor3 = Content.Holding and Color3.fromRGB(255, 0, 0) or theme.Text2
                     end)
                     utility:CreateConnection(uis.InputBegan, function(Input)
                         if Content.Holding then
                             local Success = Content:Change(Input.KeyCode.Name ~= "Unknown" and Input.KeyCode or Input.UserInputType)
                             if Success then
                                 Content.Holding = false
-                                Content_Holder_Value.TextColor3 = Color3.fromRGB(114, 114, 114)
+                                Content_Holder_Value.TextColor3 = theme.Text2
                             end
                         end
                         if Content:Get()[1] and Content:Get()[2] then
@@ -2054,8 +2337,9 @@ local Passed, Statement = pcall(function()
             return Content
         end
 
-        function sections:CreateColorpicker(Properties)
+        function sections:CreateColorpicker(Properties, theme)
             Properties = Properties or {}
+            local saveKey = Properties.saveKey or (self.Name .. "_" .. Properties.Name)
             local Content = {
                 Name = (Properties.name or Properties.Name or Properties.title or Properties.Title or "New Toggle"),
                 State = (Properties.state or Properties.State or Properties.def or Properties.Def or Properties.default or Properties.Default or Color3.fromRGB(255, 255, 255)),
@@ -2063,8 +2347,12 @@ local Passed, Statement = pcall(function()
                 Content = { Open = false },
                 Window = self.Window,
                 Page = self.Page,
-                Section = self
+                Section = self,
+                SaveKey = saveKey
             }
+            if _G.Settings[saveKey] ~= nil then
+                Content.State = _G.Settings[saveKey]
+            end
             do
                 local Content_Holder = utility:RenderObject("Frame", {
                     BackgroundColor3 = Color3.fromRGB(0, 0, 0),
@@ -2076,7 +2364,7 @@ local Passed, Statement = pcall(function()
                     ZIndex = 3
                 })
                 local Content_Holder_Outline = utility:RenderObject("Frame", {
-                    BackgroundColor3 = Color3.fromRGB(12, 12, 12),
+                    BackgroundColor3 = theme.Border,
                     BackgroundTransparency = 0,
                     BorderColor3 = Color3.fromRGB(0, 0, 0),
                     BorderSizePixel = 0,
@@ -2098,7 +2386,7 @@ local Passed, Statement = pcall(function()
                     Font = "Code",
                     RichText = true,
                     Text = Content.Name,
-                    TextColor3 = Color3.fromRGB(205, 205, 205),
+                    TextColor3 = theme.Text,
                     TextSize = 9,
                     TextStrokeTransparency = 1,
                     TextXAlignment = "Left"
@@ -2116,7 +2404,7 @@ local Passed, Statement = pcall(function()
                     Font = "Code",
                     RichText = true,
                     Text = Content.Name,
-                    TextColor3 = Color3.fromRGB(205, 205, 205),
+                    TextColor3 = theme.Text,
                     TextSize = 9,
                     TextStrokeTransparency = 1,
                     TextTransparency = 0.5,
@@ -2132,7 +2420,7 @@ local Passed, Statement = pcall(function()
                     Text = ""
                 })
                 local Holder_Outline_Frame = utility:RenderObject("Frame", {
-                    BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+                    BackgroundColor3 = Content.State,
                     BackgroundTransparency = 0,
                     BorderColor3 = Color3.fromRGB(0, 0, 0),
                     BorderSizePixel = 0,
@@ -2151,6 +2439,7 @@ local Passed, Statement = pcall(function()
                     function Content:Set(state)
                         Content.State = state
                         Holder_Outline_Frame.BackgroundColor3 = Content.State
+                        _G.Settings[Content.SaveKey] = Content.State
                         Content.Callback(Content:Get())
                     end
                     function Content:Get()
@@ -2182,9 +2471,9 @@ local Passed, Statement = pcall(function()
                             Text = ""
                         })
                         local Open_Holder_Outline = utility:RenderObject("Frame", {
-                            BackgroundColor3 = Color3.fromRGB(60, 60, 60),
+                            BackgroundColor3 = theme.Background2,
                             BackgroundTransparency = 0,
-                            BorderColor3 = Color3.fromRGB(12, 12, 12),
+                            BorderColor3 = theme.Border,
                             BorderMode = "Inset",
                             BorderSizePixel = 1,
                             Parent = Content_Open_Holder,
@@ -2193,7 +2482,7 @@ local Passed, Statement = pcall(function()
                             ZIndex = 6
                         })
                         local Open_Outline_Frame = utility:RenderObject("Frame", {
-                            BackgroundColor3 = Color3.fromRGB(40, 40, 40),
+                            BackgroundColor3 = theme.Background2,
                             BackgroundTransparency = 0,
                             BorderColor3 = Color3.fromRGB(0, 0, 0),
                             BorderSizePixel = 0,
@@ -2203,7 +2492,7 @@ local Passed, Statement = pcall(function()
                             ZIndex = 6
                         })
                         local ValSat_Picker_Outline = utility:RenderObject("Frame", {
-                            BackgroundColor3 = Color3.fromRGB(12, 12, 12),
+                            BackgroundColor3 = theme.Border,
                             BackgroundTransparency = 0,
                             BorderColor3 = Color3.fromRGB(0, 0, 0),
                             BorderSizePixel = 0,
@@ -2213,7 +2502,7 @@ local Passed, Statement = pcall(function()
                             ZIndex = 6
                         })
                         local Hue_Picker_Outline = utility:RenderObject("Frame", {
-                            BackgroundColor3 = Color3.fromRGB(12, 12, 12),
+                            BackgroundColor3 = theme.Border,
                             BackgroundTransparency = 0,
                             BorderColor3 = Color3.fromRGB(0, 0, 0),
                             BorderSizePixel = 0,
@@ -2223,7 +2512,7 @@ local Passed, Statement = pcall(function()
                             ZIndex = 6
                         })
                         local Transparency_Picker_Outline = utility:RenderObject("Frame", {
-                            BackgroundColor3 = Color3.fromRGB(12, 12, 12),
+                            BackgroundColor3 = theme.Border,
                             BackgroundTransparency = 0,
                             BorderColor3 = Color3.fromRGB(0, 0, 0),
                             BorderSizePixel = 0,
@@ -2297,230 +2586,190 @@ local Passed, Statement = pcall(function()
     end
 
     -- ==========================================
-    -- СОЗДАНИЕ ОКОН И ВКЛАДОК
+    -- ФУНКЦИЯ ПОСТРОЕНИЯ UI
     -- ==========================================
-    local window = library:CreateWindow({})
+    _G.buildUI = function()
+        local theme = _G.Themes[_G.CurrentTheme]
+        if not theme then theme = _G.Themes.Default end
 
-    -- ========== ВКЛАДКА 1: AIMBOT ==========
-    local aimbotPage = window:CreatePage({Icon = "rbxassetid://8547236654"})
-    local aimbotSection = aimbotPage:CreateSection({Name = "Aimbot", Size = 300, Side = "Left", Spacing = 2})
+        local window = library:CreateWindow({}, theme)
 
-    aimbotSection:CreateToggle({
-        Name = "Enable Aimbot RAGE",
-        State = false,
-        Callback = function(val) _G.AimEnabled = val end
-    })
+        local aimbotPage = window:CreatePage({Icon = "rbxassetid://8547236654"}, theme)
+        local aimbotSection = aimbotPage:CreateSection({Name = "Aimbot", Size = 300, Side = "Left", Spacing = 2}, theme)
+        aimbotSection:CreateToggle({
+            Name = "Enable Aimbot RAGE",
+            State = _G.AimEnabled,
+            saveKey = "AimbotEnabled",
+            Callback = function(val) _G.AimEnabled = val end
+        }, theme)
 
-    -- ========== ВКЛАДКА 2: VISUALS ==========
-    local visuals = window:CreatePage({Icon = "rbxassetid://8547254518"})
-    local playeresp = visuals:CreateSection({Name = "Player ESP", Size = 330, Side = "Left", Spacing = 2})
-    playeresp:CreateToggle({Name = "Enable ESP", State = false, Callback = function(val) _G.ESPEnabled = val end})
-    playeresp:CreateToggle({Name = "Gun ESP", State = false, Callback = function(val) _G.GunESPEnabled = val end})
+        local visuals = window:CreatePage({Icon = "rbxassetid://8547254518"}, theme)
+        local playeresp = visuals:CreateSection({Name = "Player ESP", Size = 330, Side = "Left", Spacing = 2}, theme)
+        playeresp:CreateToggle({Name = "Enable ESP", State = _G.ESPEnabled, saveKey = "ESPEnabled", Callback = function(val) _G.ESPEnabled = val end}, theme)
+        playeresp:CreateToggle({Name = "Gun ESP", State = _G.GunESPEnabled, saveKey = "GunESPEnabled", Callback = function(val) _G.GunESPEnabled = val end}, theme)
 
-    local coloredmodels = visuals:CreateSection({Name = "Colored models", Size = 158, Side = "Left"})
-    coloredmodels:CreateToggle({Name = "Player", State = false, Callback = function() end})
-    coloredmodels:CreateToggle({Name = "Player behind wall", State = false, Callback = function() end})
-    coloredmodels:CreateToggle({Name = "Teammate", State = false, Callback = function() end})
-    coloredmodels:CreateToggle({Name = "Teammate behind wall", State = false, Callback = function() end})
-    coloredmodels:CreateToggle({Name = "Local player", State = false, Callback = function() end})
-    coloredmodels:CreateToggle({Name = "Local player fake", State = false, Callback = function() end})
-    coloredmodels:CreateToggle({Name = "Ragdolls", State = false, Callback = function() end})
-    coloredmodels:CreateToggle({Name = "Hands", State = false, Callback = function() end})
-    coloredmodels:CreateToggle({Name = "Weapon viewmodel", State = false, Callback = function() end})
-    coloredmodels:CreateToggle({Name = "Disable model occlusion", State = false, Callback = function() end})
-    coloredmodels:CreateToggle({Name = "Shadow", State = false, Callback = function() end})
-    coloredmodels:CreateToggle({Name = "Props", State = false, Callback = function() end})
+        local coloredmodels = visuals:CreateSection({Name = "Colored models", Size = 158, Side = "Left"}, theme)
+        coloredmodels:CreateToggle({Name = "Player", State = false, saveKey = "ColoredPlayer", Callback = function() end}, theme)
+        coloredmodels:CreateToggle({Name = "Player behind wall", State = false, saveKey = "ColoredWall", Callback = function() end}, theme)
+        coloredmodels:CreateToggle({Name = "Teammate", State = false, saveKey = "ColoredTeammate", Callback = function() end}, theme)
+        coloredmodels:CreateToggle({Name = "Teammate behind wall", State = false, saveKey = "ColoredTeammateWall", Callback = function() end}, theme)
+        coloredmodels:CreateToggle({Name = "Local player", State = false, saveKey = "ColoredLocal", Callback = function() end}, theme)
+        coloredmodels:CreateToggle({Name = "Local player fake", State = false, saveKey = "ColoredLocalFake", Callback = function() end}, theme)
+        coloredmodels:CreateToggle({Name = "Ragdolls", State = false, saveKey = "ColoredRagdolls", Callback = function() end}, theme)
+        coloredmodels:CreateToggle({Name = "Hands", State = false, saveKey = "ColoredHands", Callback = function() end}, theme)
+        coloredmodels:CreateToggle({Name = "Weapon viewmodel", State = false, saveKey = "ColoredWeapon", Callback = function() end}, theme)
+        coloredmodels:CreateToggle({Name = "Disable model occlusion", State = false, saveKey = "DisableOcclusion", Callback = function() end}, theme)
+        coloredmodels:CreateToggle({Name = "Shadow", State = false, saveKey = "ColoredShadow", Callback = function() end}, theme)
+        coloredmodels:CreateToggle({Name = "Props", State = false, saveKey = "ColoredProps", Callback = function() end}, theme)
 
-    local otheresp = visuals:CreateSection({Name = "Other ESP", Size = 200, Side = "Right"})
-    otheresp:CreateToggle({Name = "Radar", State = false, Callback = function() end})
-    otheresp:CreateMultibox({Name = "Dropped weapons", State = {1, 3, 4}, Options = {"Icon", "Text", "Glow", "Ammo", "Distance"}, Callback = function() end})
-    otheresp:CreateToggle({Name = "Grenades", State = false, Callback = function() end})
-    otheresp:CreateToggle({Name = "Inaccuracy overlay", State = false, Callback = function() end})
-    otheresp:CreateToggle({Name = "Recoil overlay", State = false, Callback = function() end})
-    otheresp:CreateToggle({Name = "Crosshair", State = false, Callback = function() end})
-    otheresp:CreateToggle({Name = "Bomb", State = false, Callback = function() end})
-    otheresp:CreateToggle({Name = "Grenade trajectory", State = false, Callback = function() end})
-    otheresp:CreateToggle({Name = "Grenade proximity warning", State = false, Callback = function() end})
-    otheresp:CreateToggle({Name = "Spectators", State = false, Callback = function() end})
-    otheresp:CreateToggle({Name = "Penetration reticle", State = false, Callback = function() end})
-    otheresp:CreateToggle({Name = "Hostages", State = false, Callback = function() end})
-    otheresp:CreateToggle({Name = "Shared esp", State = false, Callback = function() end})
-    otheresp:CreateToggle({Name = "Upgrade tablet", State = false, Callback = function() end})
-    otheresp:CreateToggle({Name = "Danger Zone items", State = false, Callback = function() end})
+        local otheresp = visuals:CreateSection({Name = "Other ESP", Size = 200, Side = "Right"}, theme)
+        otheresp:CreateToggle({Name = "Radar", State = false, saveKey = "Radar", Callback = function() end}, theme)
+        otheresp:CreateMultibox({Name = "Dropped weapons", State = {1, 3, 4}, Options = {"Icon", "Text", "Glow", "Ammo", "Distance"}, saveKey = "DroppedWeapons", Callback = function() end}, theme)
+        otheresp:CreateToggle({Name = "Grenades", State = false, saveKey = "Grenades", Callback = function() end}, theme)
+        otheresp:CreateToggle({Name = "Inaccuracy overlay", State = false, saveKey = "Inaccuracy", Callback = function() end}, theme)
+        otheresp:CreateToggle({Name = "Recoil overlay", State = false, saveKey = "Recoil", Callback = function() end}, theme)
+        otheresp:CreateToggle({Name = "Crosshair", State = false, saveKey = "Crosshair", Callback = function() end}, theme)
+        otheresp:CreateToggle({Name = "Bomb", State = false, saveKey = "Bomb", Callback = function() end}, theme)
+        otheresp:CreateToggle({Name = "Grenade trajectory", State = false, saveKey = "GrenadeTrajectory", Callback = function() end}, theme)
+        otheresp:CreateToggle({Name = "Grenade proximity warning", State = false, saveKey = "GrenadeWarning", Callback = function() end}, theme)
+        otheresp:CreateToggle({Name = "Spectators", State = false, saveKey = "Spectators", Callback = function() end}, theme)
+        otheresp:CreateToggle({Name = "Penetration reticle", State = false, saveKey = "Penetration", Callback = function() end}, theme)
+        otheresp:CreateToggle({Name = "Hostages", State = false, saveKey = "Hostages", Callback = function() end}, theme)
+        otheresp:CreateToggle({Name = "Shared esp", State = false, saveKey = "SharedESP", Callback = function() end}, theme)
+        otheresp:CreateToggle({Name = "Upgrade tablet", State = false, saveKey = "UpgradeTablet", Callback = function() end}, theme)
+        otheresp:CreateToggle({Name = "Danger Zone items", State = false, saveKey = "DangerZone", Callback = function() end}, theme)
 
-    local effects = visuals:CreateSection({Name = "Effects", Size = 288, Side = "Right"})
-    effects:CreateToggle({Name = "Remove flashbang effects", State = false, Callback = function() end})
-    effects:CreateToggle({Name = "Remove smoke grenades", State = false, Callback = function() end})
-    effects:CreateToggle({Name = "Remove fog", State = false, Callback = function() end})
-    effects:CreateToggle({Name = "Remove grass", State = false, Callback = function() end})
-    effects:CreateToggle({Name = "Remove skybox", State = false, Callback = function() end})
-    effects:CreateDropdown({Name = "Visual Recoil Adjustment", State = 1, Options = {"Off", "Remove Shake", "Remove All"}, Callback = function() end})
-    effects:CreateSlider({Name = "Transparent walls", State = 50, Max = 100, Min = 0, Decimals = 1, Suffix = "%", Callback = function() end})
-    effects:CreateSlider({Name = "Transparent props", State = 50, Max = 100, Min = 0, Decimals = 1, Suffix = "%", Callback = function() end})
-    effects:CreateDropdown({Name = "Brightness Adjustment", State = 1, Options = {"Off", "Night Mode", "Full Bright"}, Callback = function() end})
-    effects:CreateToggle({Name = "Remove scope overlay", State = false, Callback = function() end})
-    effects:CreateToggle({Name = "Instant scope", State = false, Callback = function() end})
-    effects:CreateToggle({Name = "Disable post processing", State = false, Callback = function() end})
-    effects:CreateToggle({Name = "Force third person (alive)", State = false, Callback = function() end})
-    effects:CreateToggle({Name = "Force third person (dead)", State = false, Callback = function() end})
-    effects:CreateToggle({Name = "Disable rendering of teamates", State = false, Callback = function() end})
-    effects:CreateToggle({Name = "Bullet tracers", State = false, Callback = function() end})
-    effects:CreateToggle({Name = "Bullet impacts", State = false, Callback = function() end})
-    effects:CreateToggle({Name = "Override Skybox", State = false, Callback = function() end})
+        local effects = visuals:CreateSection({Name = "Effects", Size = 288, Side = "Right"}, theme)
+        effects:CreateToggle({Name = "Remove flashbang effects", State = false, saveKey = "RemoveFlash", Callback = function() end}, theme)
+        effects:CreateToggle({Name = "Remove smoke grenades", State = false, saveKey = "RemoveSmoke", Callback = function() end}, theme)
+        effects:CreateToggle({Name = "Remove fog", State = false, saveKey = "RemoveFog", Callback = function() end}, theme)
+        effects:CreateToggle({Name = "Remove grass", State = false, saveKey = "RemoveGrass", Callback = function() end}, theme)
+        effects:CreateToggle({Name = "Remove skybox", State = false, saveKey = "RemoveSkybox", Callback = function() end}, theme)
+        effects:CreateDropdown({Name = "Visual Recoil Adjustment", State = 1, Options = {"Off", "Remove Shake", "Remove All"}, saveKey = "RecoilAdjust", Callback = function() end}, theme)
+        effects:CreateSlider({Name = "Transparent walls", State = 50, Max = 100, Min = 0, Decimals = 1, Suffix = "%", saveKey = "TransparentWalls", Callback = function() end}, theme)
+        effects:CreateSlider({Name = "Transparent props", State = 50, Max = 100, Min = 0, Decimals = 1, Suffix = "%", saveKey = "TransparentProps", Callback = function() end}, theme)
+        effects:CreateDropdown({Name = "Brightness Adjustment", State = 1, Options = {"Off", "Night Mode", "Full Bright"}, saveKey = "Brightness", Callback = function() end}, theme)
+        effects:CreateToggle({Name = "Remove scope overlay", State = false, saveKey = "RemoveScope", Callback = function() end}, theme)
+        effects:CreateToggle({Name = "Instant scope", State = false, saveKey = "InstantScope", Callback = function() end}, theme)
+        effects:CreateToggle({Name = "Disable post processing", State = false, saveKey = "DisablePost", Callback = function() end}, theme)
+        effects:CreateToggle({Name = "Force third person (alive)", State = false, saveKey = "ThirdAlive", Callback = function() end}, theme)
+        effects:CreateToggle({Name = "Force third person (dead)", State = false, saveKey = "ThirdDead", Callback = function() end}, theme)
+        effects:CreateToggle({Name = "Disable rendering of teamates", State = false, saveKey = "DisableTeammates", Callback = function() end}, theme)
+        effects:CreateToggle({Name = "Bullet tracers", State = false, saveKey = "BulletTracers", Callback = function() end}, theme)
+        effects:CreateToggle({Name = "Bullet impacts", State = false, saveKey = "BulletImpacts", Callback = function() end}, theme)
+        effects:CreateToggle({Name = "Override Skybox", State = false, saveKey = "OverrideSkybox", Callback = function() end}, theme)
 
-    -- ========== ВКЛАДКА 3: SETTINGS ==========
-    local settingsPage = window:CreatePage({Icon = "rbxassetid://8547256547"})
-    local settingsSection = settingsPage:CreateSection({Name = "Setting", Size = 200, Side = "Left"})
-    _G.WalkSpeedEnabled = false
-    _G.NoclipEnabled = false
-    _G.FlyEnabled = false
-
-    settingsSection:CreateToggle({
-        Name = "Enable WalkSpeed",
-        State = false,
-        Callback = function(val)
-            _G.WalkSpeedEnabled = val
-            local character = LocalPlayer.Character
-            local humanoid = character and character:FindFirstChildWhichIsA("Humanoid")
-            if humanoid and humanoid.Health > 0 then
-                if _G.WalkSpeedEnabled then
-                    humanoid.WalkSpeed = 28
-                else
-                    humanoid.WalkSpeed = 16
-                end
-            end
-        end
-    })
-
-    settingsSection:CreateToggle({
-        Name = "Enable Noclip",
-        State = false,
-        Callback = function(val)
-            _G.NoclipEnabled = val
-            local character = LocalPlayer.Character
-            if character then
-                for _, part in ipairs(character:GetDescendants()) do
-                    if part:IsA("BasePart") then
-                        part.CanCollide = not val
+        local settingsPage = window:CreatePage({Icon = "rbxassetid://8547256547"}, theme)
+        local settingsSection = settingsPage:CreateSection({Name = "Setting", Size = 200, Side = "Left"}, theme)
+        settingsSection:CreateToggle({
+            Name = "Enable WalkSpeed",
+            State = _G.WalkSpeedEnabled,
+            saveKey = "WalkSpeedEnabled",
+            Callback = function(val)
+                _G.WalkSpeedEnabled = val
+                local character = LocalPlayer.Character
+                local humanoid = character and character:FindFirstChildWhichIsA("Humanoid")
+                if humanoid and humanoid.Health > 0 then
+                    if _G.WalkSpeedEnabled then
+                        humanoid.WalkSpeed = 28
+                    else
+                        humanoid.WalkSpeed = 16
                     end
                 end
             end
-        end
-    })
-
-    settingsSection:CreateToggle({
-        Name = "Enable Fly",
-        State = false,
-        Callback = function(val)
-            _G.FlyEnabled = val
-            local character = LocalPlayer.Character
-            local humanoid = character and character:FindFirstChildWhichIsA("Humanoid")
-            if humanoid then
-                if val then
-                    humanoid.PlatformStand = true
-                    humanoid.AutoRotate = false
-                    humanoid.UseJumpPower = false
-                else
-                    humanoid.PlatformStand = false
-                    humanoid.AutoRotate = true
-                    humanoid.UseJumpPower = true
+        }, theme)
+        settingsSection:CreateToggle({
+            Name = "Enable Noclip",
+            State = _G.NoclipEnabled,
+            saveKey = "NoclipEnabled",
+            Callback = function(val)
+                _G.NoclipEnabled = val
+                local character = LocalPlayer.Character
+                if character then
+                    for _, part in ipairs(character:GetDescendants()) do
+                        if part:IsA("BasePart") then
+                            part.CanCollide = not val
+                        end
+                    end
                 end
             end
-        end
-    })
-
-    -- ========== ВКЛАДКА 4: SKINS ==========
-    local skins = window:CreatePage({Icon = "rbxassetid://8547258459"})
-    local skinsSection = skins:CreateSection({Name = "Skins", Size = 300, Side = "Left"})
-    skinsSection:CreateDropdown({Name = "Example Skin", State = 1, Options = {"Default", "Fancy", "Gold"}, Callback = function() end})
-
-    -- ========== ВКЛАДКА 5: CONFIG ==========
-    local config = window:CreatePage({Icon = "rbxassetid://8547269749"})
-    local configSection = config:CreateSection({Name = "Config", Size = 300, Side = "Left"})
-    configSection:CreateKeybind({Name = "Menu Key", State = {EnumType = "KeyCode", Name = "Insert"}, Mode = "Hold", Callback = function(val)
-        if val and val.EnumType and val.Name then
-            local newKey = Enum[val.EnumType][val.Name]
-            if newKey then
-                _G.MenuKey = newKey
-            end
-        end
-    end})
-
-    -- ==========================================
-    -- ESP ДЛЯ ИГРОКОВ (через Drawing, с пропуском себя)
-    -- ==========================================
-    local RunService = game:GetService("RunService")
-    local PlayersService = game:GetService("Players")
-    local LocalPlayer = PlayersService.LocalPlayer
-    local Camera = workspace.CurrentCamera
-    local Lines = {}
-
-    local function HasCharacter(Player)
-        return Player.Character and Player.Character:FindFirstChild("HumanoidRootPart")
-    end
-
-    local function GetPlayerColor(Player)
-        local Character = Player.Character
-        local Backpack = Player:FindFirstChild("Backpack")
-        if (Backpack and Backpack:FindFirstChild("Knife")) or (Character and Character:FindFirstChild("Knife")) then
-            return Color3.fromRGB(255, 0, 0)
-        elseif (Backpack and Backpack:FindFirstChild("Gun")) or (Character and Character:FindFirstChild("Gun")) then
-            return Color3.fromRGB(0, 0, 255)
-        else
-            return Color3.fromRGB(0, 255, 0)
-        end
-    end
-
-    local function DrawLine(From, To, color)
-        local FromScreen, FromVisible = Camera:WorldToViewportPoint(From)
-        local ToScreen, ToVisible = Camera:WorldToViewportPoint(To)
-        if not FromVisible and not ToVisible then return end
-        local Line = Drawing.new("Line")
-        Line.Thickness = 1
-        Line.From = Vector2.new(FromScreen.X, FromScreen.Y)
-        Line.To = Vector2.new(ToScreen.X, ToScreen.Y)
-        Line.Color = color or Color3.fromRGB(255, 255, 255)
-        Line.Visible = true
-        table.insert(Lines, Line)
-    end
-
-    local function GetCorners(Part)
-        local CF, Size, Corners = Part.CFrame, Part.Size / 2, {}
-        for X = -1, 1, 2 do
-            for Y = -1, 1, 2 do
-                for Z = -1, 1, 2 do
-                    Corners[#Corners+1] = (CF * CFrame.new(Size * Vector3.new(X, Y, Z))).Position
+        }, theme)
+        settingsSection:CreateToggle({
+            Name = "Enable Fly",
+            State = _G.FlyEnabled,
+            saveKey = "FlyEnabled",
+            Callback = function(val)
+                _G.FlyEnabled = val
+                local character = LocalPlayer.Character
+                local humanoid = character and character:FindFirstChildWhichIsA("Humanoid")
+                if humanoid then
+                    if val then
+                        humanoid.PlatformStand = true
+                        humanoid.AutoRotate = false
+                        humanoid.UseJumpPower = false
+                    else
+                        humanoid.PlatformStand = false
+                        humanoid.AutoRotate = true
+                        humanoid.UseJumpPower = true
+                    end
                 end
             end
-        end
-        return Corners
-    end
+        }, theme)
 
-    local function DrawEsp(Player)
-        local HRP = Player.Character.HumanoidRootPart
-        local CubeVertices = GetCorners({CFrame = HRP.CFrame * CFrame.new(0, -0.5, 0), Size = Vector3.new(3, 5, 3)})
-        local playerColor = GetPlayerColor(Player)
-        local connections = {{1,2},{2,6},{6,5},{5,1},{1,3},{2,4},{6,8},{5,7},{3,4},{4,8},{8,7},{7,3}}
-        for _, pair in pairs(connections) do
-            DrawLine(CubeVertices[pair[1]], CubeVertices[pair[2]], playerColor)
-        end
-    end
-
-    local function BoxEsp()
-        for i = 1, #Lines do
-            if Lines[i] then Lines[i]:Remove() end
-        end
-        Lines = {}
-        if not _G.ESPEnabled then return end
-        for _, Player in pairs(PlayersService:GetPlayers()) do
-            if Player ~= LocalPlayer and HasCharacter(Player) then
-                DrawEsp(Player)
+        local skins = window:CreatePage({Icon = "rbxassetid://8547258459"}, theme)
+        local skinsSection = skins:CreateSection({Name = "Skins", Size = 300, Side = "Left"}, theme)
+        local themeNames = {"Default", "Summer", "FATALITY", "NEVERLOSE", "DarkPurple", "Ocean", "Matrix", "Bloody", "Neon", "Cyberpunk"}
+        local displayNames = {"Default", "Summer", "FATALITY", "NEVERLOSE", "Dark Purple", "Ocean", "Matrix", "Bloody", "Neon", "Cyberpunk"}
+        skinsSection:CreateDropdown({
+            Name = "Menu Skin",
+            State = (function()
+                local t = _G.CurrentTheme
+                for i, v in ipairs(themeNames) do
+                    if v == t then return i end
+                end
+                return 1
+            end)(),
+            Options = displayNames,
+            saveKey = "MenuTheme",
+            Callback = function(val)
+                local newTheme = themeNames[val]
+                if newTheme and newTheme ~= _G.CurrentTheme then
+                    _G.CurrentTheme = newTheme
+                    local oldWindow = _G.MainWindow
+                    if oldWindow and oldWindow.MainFrame and oldWindow.MainFrame.Parent then
+                        oldWindow:Fade(false)
+                        task.wait(0.3)
+                        oldWindow:Unload()
+                    end
+                    _G.buildUI()
+                    if _G.MainWindow then
+                        _G.MainWindow:Fade(true)
+                    end
+                end
             end
-        end
+        }, theme)
+
+        local config = window:CreatePage({Icon = "rbxassetid://8547269749"}, theme)
+        local configSection = config:CreateSection({Name = "Config", Size = 300, Side = "Left"}, theme)
+        configSection:CreateKeybind({
+            Name = "Menu Key",
+            State = {EnumType = "KeyCode", Name = "Insert"},
+            Mode = "Hold",
+            saveKey = "MenuKeyBind",
+            Callback = function(val)
+                if val and val.EnumType and val.Name then
+                    local newKey = Enum[val.EnumType][val.Name]
+                    if newKey then
+                        _G.MenuKey = newKey
+                    end
+                end
+            end
+        }, theme)
+
+        _G.MainWindow = window
     end
 
-    RunService.RenderStepped:Connect(BoxEsp)
-
+    _G.buildUI()
 end)
 
 if not Passed then
@@ -2528,16 +2777,14 @@ if not Passed then
 end
 
 -- ==========================================
--- НОВЫЙ АИМБОТ (КЛАССИЧЕСКИЙ, МГНОВЕННЫЙ)
+-- АИМБОТ
 -- ==========================================
 if _G.AimEnabled == nil then _G.AimEnabled = false end
-
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 local Camera = workspace.CurrentCamera
 local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
-
 local HoldingRightClick = false
 
 local function getPlayerRole(player)
@@ -2553,15 +2800,10 @@ end
 local function getPriorityTarget()
     local myRole = getPlayerRole(LocalPlayer)
     local targetRole = "None"
-    if myRole == "Sheriff" then
-        targetRole = "Murderer"
-    elseif myRole == "Murderer" then
-        targetRole = "Sheriff"
-    end
-
+    if myRole == "Sheriff" then targetRole = "Murderer"
+    elseif myRole == "Murderer" then targetRole = "Sheriff" end
     local closestPlayer = nil
     local shortestDistance = math.huge
-
     for _, player in ipairs(Players:GetPlayers()) do
         if player ~= LocalPlayer and player.Character and player.Character:FindFirstChild("HumanoidRootPart") and player.Character:FindFirstChild("Humanoid") and player.Character.Humanoid.Health > 0 then
             local role = getPlayerRole(player)
@@ -2574,7 +2816,6 @@ local function getPriorityTarget()
             end
         end
     end
-
     if not closestPlayer then
         shortestDistance = math.huge
         for _, player in ipairs(Players:GetPlayers()) do
@@ -2617,7 +2858,7 @@ RunService.RenderStepped:Connect(function()
 end)
 
 -- ==========================================
--- GUN ESP (ГАРАНТИРОВАННО РАБОТАЕТ)
+-- GUN ESP
 -- ==========================================
 spawn(function()
     local Workspace = game:GetService("Workspace")
@@ -2630,11 +2871,9 @@ spawn(function()
     local function createBlueESP(targetPart)
         local uniqueName = targetPart.Name .. "_BlueESP"
         if ESPFolder:FindFirstChild(uniqueName) then return end
-
         local wrapper = Instance.new("Configuration")
         wrapper.Name = uniqueName
         wrapper.Parent = ESPFolder
-
         local sphere = Instance.new("SphereHandleAdornment")
         sphere.Radius = 1.8
         sphere.Color3 = Color3.fromRGB(0, 120, 255)
@@ -2643,14 +2882,12 @@ spawn(function()
         sphere.Transparency = 0.5
         sphere.Adornee = targetPart
         sphere.Parent = wrapper
-
         local billboard = Instance.new("BillboardGui")
         billboard.Size = UDim2.new(0, 150, 0, 40)
         billboard.AlwaysOnTop = true
         billboard.ExtentsOffset = Vector3.new(0, 2.2, 0)
         billboard.Adornee = targetPart
         billboard.Parent = wrapper
-
         local textLabel = Instance.new("TextLabel")
         textLabel.Size = UDim2.new(1, 0, 1, 0)
         textLabel.BackgroundTransparency = 1
@@ -2690,10 +2927,9 @@ spawn(function()
 end)
 
 -- ==========================================
--- WALKSPEED (ПОСТОЯННЫЙ ЦИКЛ)
+-- WALKSPEED
 -- ==========================================
 if _G.WalkSpeedEnabled == nil then _G.WalkSpeedEnabled = false end
-
 local gmt = getrawmetatable(game)
 setreadonly(gmt, false)
 local oldIndex = gmt.__index
@@ -2718,7 +2954,7 @@ RunService.Stepped:Connect(function()
 end)
 
 -- ==========================================
--- ОБРАБОТЧИК НОКЛИПА (при смене персонажа)
+-- НОКЛИП И ПОЛЁТ (обработчики)
 -- ==========================================
 LocalPlayer.CharacterAdded:Connect(function(char)
     if _G.NoclipEnabled then
@@ -2739,9 +2975,6 @@ LocalPlayer.CharacterAdded:Connect(function(char)
     end
 end)
 
--- ==========================================
--- СИСТЕМА ПОЛЁТА
--- ==========================================
 local flyConnection
 local function startFly()
     if flyConnection then flyConnection:Disconnect() end
@@ -2753,12 +2986,10 @@ local function startFly()
         if not humanoid then return end
         local rootPart = character:FindFirstChild("HumanoidRootPart")
         if not rootPart then return end
-
         local camera = workspace.CurrentCamera
         local forward = camera.CFrame.LookVector
         local right = camera.CFrame.RightVector
         local up = camera.CFrame.UpVector
-
         local moveVector = Vector3.new(0, 0, 0)
         if uis:IsKeyDown(Enum.KeyCode.W) then moveVector = moveVector + forward end
         if uis:IsKeyDown(Enum.KeyCode.S) then moveVector = moveVector - forward end
@@ -2766,7 +2997,6 @@ local function startFly()
         if uis:IsKeyDown(Enum.KeyCode.D) then moveVector = moveVector + right end
         if uis:IsKeyDown(Enum.KeyCode.Space) then moveVector = moveVector + up end
         if uis:IsKeyDown(Enum.KeyCode.LeftShift) then moveVector = moveVector - up end
-
         if moveVector.Magnitude > 0 then
             moveVector = moveVector.Unit * 50
             rootPart.Velocity = Vector3.new(0, 0, 0)
@@ -2774,12 +3004,10 @@ local function startFly()
         else
             rootPart.Velocity = Vector3.new(0, 0, 0)
         end
-
         humanoid.PlatformStand = true
         humanoid.UseJumpPower = false
     end)
 end
-
 startFly()
 
 -- ==========================================
