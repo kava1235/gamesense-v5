@@ -5,7 +5,7 @@ _G.MenuKey = Enum.KeyCode.Insert
 _G.AimEnabled = false
 _G.GunESPEnabled = false
 _G.WalkSpeedEnabled = false
-_G.ESPEnabled = false
+_G.ESPEnabled = false   -- ПО УМОЛЧАНИЮ ВЫКЛЮЧЕН
 _G.NoclipEnabled = false
 _G.FlyEnabled = false
 
@@ -118,36 +118,51 @@ _G.CurrentTheme = 'Default'
 _G.Settings = {}
 
 -- ==========================================
--- ВАШ ESP (ПОЛНОСТЬЮ ЗАМЕНЁН)
+-- ESP ИГРОКОВ (УПРАВЛЯЕТСЯ ЧЕРЕЗ _G.ESPEnabled)
 -- ==========================================
--- Services
 local RunService = game:GetService("RunService")
 local PlayersService = game:GetService("Players")
 local Camera = workspace.CurrentCamera
 local LocalPlayer = PlayersService.LocalPlayer
 
--- Cache / Pool storage for performance optimization
+local Roles_Cache = {}
 local ESP_Cache = {}
+local MAX_DISTANCE = 400
 
--- Helper functions
 local function HasCharacter(Player)
-    return Player.Character and Player.Character:FindFirstChild("HumanoidRootPart")
+    return Player.Character and Player.Character:FindFirstChild("HumanoidRootPart") and Player.Character:FindFirstChild("Head")
 end
 
 local function GetPlayerColor(Player)
+    if Roles_Cache[Player] then
+        return Roles_Cache[Player]
+    end
+
     local Character = Player.Character
     local Backpack = Player:FindFirstChild("Backpack")
-    
-    if (Backpack and Backpack:FindFirstChild("Knife")) or (Character and Character:FindFirstChild("Knife")) then
-        return Color3.fromRGB(255, 0, 50)     -- Сверхъяркий Неоновый Красный
-    elseif (Backpack and Backpack:FindFirstChild("Gun")) or (Character and Character:FindFirstChild("Gun")) then
-        return Color3.fromRGB(0, 195, 255)    -- Яркий Электрический Голубой
-    else
-        return Color3.fromRGB(0, 255, 100)    -- Кислотный Неоновый Зеленый
+    local isMurderer = false
+    local isSheriff = false
+
+    if Backpack then
+        if Backpack:FindFirstChild("Knife") or Backpack:FindFirstChild("Blade") then isMurderer = true end
+        if Backpack:FindFirstChild("Gun") or Backpack:FindFirstChild("Revolver") then isSheriff = true end
     end
+
+    if Character then
+        if Character:FindFirstChild("Knife") or Character:FindFirstChild("Blade") or Character:FindFirstChild("RealKnife") then isMurderer = true end
+        if Character:FindFirstChild("Gun") or Character:FindFirstChild("Revolver") then isSheriff = true end
+    end
+
+    if isMurderer then
+        Roles_Cache[Player] = Color3.fromRGB(255, 0, 50)
+        return Roles_Cache[Player]
+    elseif isSheriff then
+        Roles_Cache[Player] = Color3.fromRGB(0, 195, 255)
+    end
+
+    return Color3.fromRGB(0, 255, 100)
 end
 
--- Create a drawing object with outlines
 local function createDrawing(class, properties)
     local obj = Drawing.new(class)
     for prop, val in pairs(properties) do
@@ -156,120 +171,132 @@ local function createDrawing(class, properties)
     return obj
 end
 
--- Container for player drawing objects (Corner Box Only)
 local function CreateESPContainer()
-    local box = {
-        Main = {},
-        Outline = {}
-    }
-    
-    -- Create 8 lines for 4 corners (Увеличенная толщина для максимальной видимости)
+    local box = { Main = {}, Outline = {} }
     for i = 1, 8 do
         box.Main[i] = createDrawing("Line", {Thickness = 2.5, ZIndex = 4, Visible = false})
         box.Outline[i] = createDrawing("Line", {Thickness = 5.0, Color = Color3.fromRGB(0, 0, 0), ZIndex = 1, Visible = false})
     end
-    
     return box
+end
+
+local function HidePlayerESP(box)
+    for i = 1, 8 do
+        if box.Main[i] then box.Main[i].Visible = false end
+        if box.Outline[i] then box.Outline[i].Visible = false end
+    end
 end
 
 local function RemoveESP(Player)
     if ESP_Cache[Player] then
         local box = ESP_Cache[Player]
         for i = 1, 8 do
-            box.Main[i]:Remove()
-            box.Outline[i]:Remove()
+            if box.Main[i] then box.Main[i]:Remove() end
+            if box.Outline[i] then box.Outline[i]:Remove() end
         end
         ESP_Cache[Player] = nil
+        Roles_Cache[Player] = nil
     end
 end
 
--- Update layout
 local function UpdateESP()
+    if not _G.ESPEnabled then
+        for _, Player in pairs(PlayersService:GetPlayers()) do
+            if ESP_Cache[Player] then
+                HidePlayerESP(ESP_Cache[Player])
+            end
+        end
+        return
+    end
+
     for _, Player in pairs(PlayersService:GetPlayers()) do
         if Player == LocalPlayer then continue end
         
-        if HasCharacter(Player) then
-            if not ESP_Cache[Player] then
-                ESP_Cache[Player] = CreateESPContainer()
-            end
-            
-            local box = ESP_Cache[Player]
-            local Character = Player.Character
-            local HRP = Character.HumanoidRootPart
-            
-            -- Calculate precise height and width based on 3D bounding box
-            local _, Size = Character:GetBoundingBox()
-            local TopWorld = (HRP.CFrame * CFrame.new(0, Size.Y / 2, 0)).Position
-            local BottomWorld = (HRP.CFrame * CFrame.new(0, -Size.Y / 2, 0)).Position
-            
-            local TopScreen, TopOnScreen = Camera:WorldToViewportPoint(TopWorld)
-            local BottomScreen, BottomOnScreen = Camera:WorldToViewportPoint(BottomWorld)
-            
-            if TopOnScreen and BottomOnScreen then
-                local Height = math.abs(TopScreen.Y - BottomScreen.Y)
-                local Width = Height * 0.55 -- Fixed aesthetic aspect ratio
+        local success, err = pcall(function()
+            if HasCharacter(Player) then
+                if not ESP_Cache[Player] then
+                    ESP_Cache[Player] = CreateESPContainer()
+                end
                 
-                local X = TopScreen.X - Width / 2
-                local Y = TopScreen.Y
+                local box = ESP_Cache[Player]
+                local Character = Player.Character
+                local HRP = Character.HumanoidRootPart
+                local Head = Character.Head
                 
-                local color = GetPlayerColor(Player)
-                local length = Width / 3.5 -- Чуть более длинные уголки для лучшей видимости
+                local Distance = (Camera.CFrame.Position - HRP.Position).Magnitude
+                if Distance > MAX_DISTANCE then
+                    HidePlayerESP(box)
+                    return
+                end
                 
-                -- Corner points configuration
-                local lines = {
-                    -- Top Left
-                    {From = Vector2.new(X, Y), To = Vector2.new(X + length, Y)},
-                    {From = Vector2.new(X, Y), To = Vector2.new(X, Y + length)},
-                    -- Top Right
-                    {From = Vector2.new(X + Width, Y), To = Vector2.new(X + Width - length, Y)},
-                    {From = Vector2.new(X + Width, Y), To = Vector2.new(X + Width, Y + length)},
-                    -- Bottom Left
-                    {From = Vector2.new(X, Y + Height), To = Vector2.new(X + length, Y + Height)},
-                    {From = Vector2.new(X, Y + Height), To = Vector2.new(X, Y + Height - length)},
-                    -- Bottom Right
-                    {From = Vector2.new(X + Width, Y + Height), To = Vector2.new(X + Width - length, Y + Height)},
-                    {From = Vector2.new(X + Width, Y + Height), To = Vector2.new(X + Width, Y + Height - length)}
-                }
+                local TopWorld = Head.Position + Vector3.new(0, 1.2, 0)
+                local BottomWorld = HRP.Position - Vector3.new(0, 3, 0)
                 
-                -- Apply positions and colors to Corners
-                for i = 1, 8 do
-                    local lData = lines[i]
-                    local main = box.Main[i]
-                    local out = box.Outline[i]
+                local TopScreen, TopOnScreen = Camera:WorldToViewportPoint(TopWorld)
+                local BottomScreen, BottomOnScreen = Camera:WorldToViewportPoint(BottomWorld)
+                
+                if TopOnScreen and BottomOnScreen then
+                    local Height = math.clamp(math.abs(TopScreen.Y - BottomScreen.Y), 10, Camera.ViewportSize.Y)
+                    local Width = Height * 0.55
                     
-                    main.From = lData.From
-                    main.To = lData.To
-                    main.Color = color
-                    main.Visible = true
+                    local X = TopScreen.X - Width / 2
+                    local Y = TopScreen.Y
                     
-                    out.From = lData.From
-                    out.To = lData.To
-                    out.Visible = true
+                    local color = GetPlayerColor(Player)
+                    local length = Width / 3.5
+                    
+                    local lines = {
+                        {From = Vector2.new(X, Y), To = Vector2.new(X + length, Y)},
+                        {From = Vector2.new(X, Y), To = Vector2.new(X, Y + length)},
+                        {From = Vector2.new(X + Width, Y), To = Vector2.new(X + Width - length, Y)},
+                        {From = Vector2.new(X + Width, Y), To = Vector2.new(X + Width, Y + length)},
+                        {From = Vector2.new(X, Y + Height), To = Vector2.new(X + length, Y + Height)},
+                        {From = Vector2.new(X, Y + Height), To = Vector2.new(X, Y + Height - length)},
+                        {From = Vector2.new(X + Width, Y + Height), To = Vector2.new(X + Width - length, Y + Height)},
+                        {From = Vector2.new(X + Width, Y + Height), To = Vector2.new(X + Width, Y + Height - length)}
+                    }
+                    
+                    for i = 1, 8 do
+                        local lData = lines[i]
+                        local main = box.Main[i]
+                        local out = box.Outline[i]
+                        
+                        main.From = lData.From
+                        main.To = lData.To
+                        main.Color = color
+                        main.Visible = true
+                        
+                        out.From = lData.From
+                        out.To = lData.To
+                        out.Visible = true
+                    end
+                else
+                    HidePlayerESP(box)
                 end
             else
-                -- Hide if offscreen
-                for i = 1, 8 do
-                    box.Main[i].Visible = false
-                    box.Outline[i].Visible = false
+                if ESP_Cache[Player] then
+                    HidePlayerESP(ESP_Cache[Player])
                 end
             end
-        else
-            -- Hide if player has no character/dead
-            if ESP_Cache[Player] then
-                local box = ESP_Cache[Player]
-                for i = 1, 8 do
-                    box.Main[i].Visible = false
-                    box.Outline[i].Visible = false
-                end
-            end
+        end)
+        
+        if not success then
+            Roles_Cache[Player] = nil
         end
     end
 end
 
--- Clean up leaving players
-PlayersService.PlayerRemoving:Connect(RemoveESP)
+local function AutoClearCache()
+    Roles_Cache = {}
+    for _, Player in pairs(PlayersService:GetPlayers()) do
+        if ESP_Cache[Player] then
+            HidePlayerESP(ESP_Cache[Player])
+        end
+    end
+end
 
--- Bind execution
+workspace.ChildAdded:Connect(AutoClearCache)
+PlayersService.PlayerRemoving:Connect(RemoveESP)
 RunService.RenderStepped:Connect(UpdateESP)
 
 -- ==========================================
@@ -2858,67 +2885,104 @@ RunService.RenderStepped:Connect(function()
 end)
 
 -- ==========================================
--- GUN ESP
+-- GUN ESP (ОПТИМИЗИРОВАННЫЙ – НЕ ЛАГАЕТ)
 -- ==========================================
 spawn(function()
     local Workspace = game:GetService("Workspace")
     local RunService = game:GetService("RunService")
     local CoreGui = game:GetService("CoreGui")
+    
     local ESPFolder = Instance.new("Folder")
     ESPFolder.Name = "MM2_CleanBlueGun_ESP"
     ESPFolder.Parent = CoreGui
-
-    local function createBlueESP(targetPart)
-        local uniqueName = targetPart.Name .. "_BlueESP"
-        if ESPFolder:FindFirstChild(uniqueName) then return end
-        local wrapper = Instance.new("Configuration")
-        wrapper.Name = uniqueName
-        wrapper.Parent = ESPFolder
-        local sphere = Instance.new("SphereHandleAdornment")
-        sphere.Radius = 1.8
-        sphere.Color3 = Color3.fromRGB(0, 120, 255)
-        sphere.AlwaysOnTop = true
-        sphere.ZIndex = 10
-        sphere.Transparency = 0.5
-        sphere.Adornee = targetPart
-        sphere.Parent = wrapper
-        local billboard = Instance.new("BillboardGui")
-        billboard.Size = UDim2.new(0, 150, 0, 40)
-        billboard.AlwaysOnTop = true
-        billboard.ExtentsOffset = Vector3.new(0, 2.2, 0)
-        billboard.Adornee = targetPart
-        billboard.Parent = wrapper
-        local textLabel = Instance.new("TextLabel")
-        textLabel.Size = UDim2.new(1, 0, 1, 0)
-        textLabel.BackgroundTransparency = 1
-        textLabel.Text = "GUN"
-        textLabel.TextColor3 = Color3.fromRGB(0, 180, 255)
-        textLabel.TextSize = 16
-        textLabel.Font = Enum.Font.GothamBold
-        textLabel.TextStrokeTransparency = 0.3
-        textLabel.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
-        textLabel.Parent = billboard
-    end
-
-    local function findDroppedGun()
-        local gun = Workspace:FindFirstChild("GunDrop")
-        if gun then return gun end
-        for _, obj in ipairs(Workspace:GetDescendants()) do
-            if obj.Name == "GunDrop" then return obj end
-        end
-        return nil
-    end
-
-    RunService.RenderStepped:Connect(function()
+    
+    local lastUpdate = 0
+    
+    RunService.Heartbeat:Connect(function(delta)
+        lastUpdate = lastUpdate + delta
+        if lastUpdate < 0.15 then return end
+        lastUpdate = 0
+        
         if _G.GunESPEnabled then
-            local droppedGun = findDroppedGun()
-            if droppedGun then
-                local meshPart = droppedGun:FindFirstChildWhichIsA("BasePart") or droppedGun
-                if meshPart then
-                    createBlueESP(meshPart)
-                end
+            -- Ищем оружие
+            local droppedGun = nil
+            local gun = Workspace:FindFirstChild("GunDrop")
+            if gun then
+                droppedGun = gun
             else
+                for _, obj in ipairs(Workspace:GetDescendants()) do
+                    if obj.Name == "GunDrop" then
+                        droppedGun = obj
+                        break
+                    end
+                end
+            end
+            
+            -- Очищаем папку, если оружия нет
+            if not droppedGun then
                 ESPFolder:ClearAllChildren()
+                return
+            end
+            
+            local meshPart = droppedGun:FindFirstChildWhichIsA("BasePart") or droppedGun
+            if not meshPart then
+                ESPFolder:ClearAllChildren()
+                return
+            end
+            
+            -- Удаляем старые объекты, если они не соответствуют текущему оружию
+            for _, child in ipairs(ESPFolder:GetChildren()) do
+                if child:IsA("Configuration") then
+                    local adornment = child:FindFirstChildWhichIsA("SphereHandleAdornment")
+                    if adornment and adornment.Adornee ~= meshPart then
+                        child:Destroy()
+                    end
+                end
+            end
+            
+            -- Создаём новый ESP, если его нет
+            local existing = nil
+            for _, child in ipairs(ESPFolder:GetChildren()) do
+                if child:IsA("Configuration") then
+                    local adornment = child:FindFirstChildWhichIsA("SphereHandleAdornment")
+                    if adornment and adornment.Adornee == meshPart then
+                        existing = child
+                        break
+                    end
+                end
+            end
+            
+            if not existing then
+                local wrapper = Instance.new("Configuration")
+                wrapper.Name = "GunESP_" .. tostring(meshPart)
+                wrapper.Parent = ESPFolder
+                
+                local sphere = Instance.new("SphereHandleAdornment")
+                sphere.Radius = 1.8
+                sphere.Color3 = Color3.fromRGB(0, 120, 255)
+                sphere.AlwaysOnTop = true
+                sphere.ZIndex = 10
+                sphere.Transparency = 0.5
+                sphere.Adornee = meshPart
+                sphere.Parent = wrapper
+                
+                local billboard = Instance.new("BillboardGui")
+                billboard.Size = UDim2.new(0, 150, 0, 40)
+                billboard.AlwaysOnTop = true
+                billboard.ExtentsOffset = Vector3.new(0, 2.2, 0)
+                billboard.Adornee = meshPart
+                billboard.Parent = wrapper
+                
+                local textLabel = Instance.new("TextLabel")
+                textLabel.Size = UDim2.new(1, 0, 1, 0)
+                textLabel.BackgroundTransparency = 1
+                textLabel.Text = "GUN"
+                textLabel.TextColor3 = Color3.fromRGB(0, 180, 255)
+                textLabel.TextSize = 16
+                textLabel.Font = Enum.Font.GothamBold
+                textLabel.TextStrokeTransparency = 0.3
+                textLabel.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+                textLabel.Parent = billboard
             end
         else
             ESPFolder:ClearAllChildren()
@@ -2930,6 +2994,7 @@ end)
 -- WALKSPEED
 -- ==========================================
 if _G.WalkSpeedEnabled == nil then _G.WalkSpeedEnabled = false end
+
 local gmt = getrawmetatable(game)
 setreadonly(gmt, false)
 local oldIndex = gmt.__index
@@ -2954,7 +3019,7 @@ RunService.Stepped:Connect(function()
 end)
 
 -- ==========================================
--- НОКЛИП И ПОЛЁТ (обработчики)
+-- НОКЛИП И ПОЛЁТ (ОБРАБОТЧИКИ)
 -- ==========================================
 LocalPlayer.CharacterAdded:Connect(function(char)
     if _G.NoclipEnabled then
@@ -3011,13 +3076,14 @@ end
 startFly()
 
 -- ==========================================
--- HUD GAMESENSE
+-- HUD GAMESENSE (ИСПРАВЛЕННЫЙ – ПОКАЗЫВАЕТ FPS)
 -- ==========================================
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Name = "GamesenseUI"
 ScreenGui.IgnoreGuiInset = true
 ScreenGui.ResetOnSpawn = false
 ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+ScreenGui.DisplayOrder = 9999
 ScreenGui.Parent = game:GetService("CoreGui")
 
 local MainFrame = Instance.new("Frame")
@@ -3028,6 +3094,7 @@ MainFrame.Size = UDim2.new(0, 180, 0, 22)
 MainFrame.Position = UDim2.new(1, -100, 0, 15)
 MainFrame.AnchorPoint = Vector2.new(1, 0)
 MainFrame.Parent = ScreenGui
+MainFrame.ZIndex = 10
 
 local UICorner = Instance.new("UICorner")
 UICorner.CornerRadius = UDim.new(0, 3)
@@ -3047,6 +3114,7 @@ TextLabel.TextWrapped = false
 TextLabel.RichText = true
 TextLabel.Text = "<font color='#a3c45a'>gamesense</font> 0 fps"
 TextLabel.Parent = MainFrame
+TextLabel.ZIndex = 10
 
 local RunService2 = game:GetService("RunService")
 local fps = 0
